@@ -2,14 +2,15 @@
 const path = require("path");
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/index.vue"),
+            entry: path.resolve(__dirname, "src/index.ts"),
             name: "wallet-connector",
-            fileName: (format) => `wallet-connector.${format}.js`,
+            fileName: (format) => `wallet-connector.${format}.ts`,
         },
         rollupOptions: {
             external: ["vue"],
@@ -22,5 +23,5 @@ export default defineConfig({
             },
         },
     },
-    plugins: [vue()],
+    plugins: [vue(), tsconfigPaths()],
 });
