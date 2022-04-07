@@ -8,6 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coinbase/wallet-sdk": "^3.0.5",
+    "@walletconnect/web3-provider": "^1.7.7",
+    "authereum": "^0.1.14",
+    "eth-provider": "^0.10.0",
+    "fortmatic": "^2.2.1",
     "vue": "^3.2.25"
   },
   "devDependencies": {

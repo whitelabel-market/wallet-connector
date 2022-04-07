@@ -7,7 +7,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/components/HelloWorld.vue"),
+            entry: path.resolve(__dirname, "src/index.vue"),
             name: "wallet-connector",
             fileName: (format) => `wallet-connector.${format}.js`,
         },
