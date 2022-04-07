@@ -1,16 +1,105 @@
-# Vue 3 + Typescript + Vite
+# @whitelabel-solutions/wallet-connector
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A Web3 Ethereum provider solution for multiple Wallets
 
-## Recommended IDE Setup
+## Introduction
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+@whitelabel-solutions/wallet-connector is an easy-to-use library to support Whitelabel Solutions providing wallet connect feature in their DApps.
 
-## Type Support For `.vue` Imports in TS
+It currently supports following providers (:ballot_box_with_check: = Working, :warning: = Not tested, :x: = Not working):
+- Metamask (injected) :ballot_box_with_check:
+- Coinbase Wallet :warning:
+- WalletConnect :warning:
+- Fortmatic :warning:
+- Authereum :x:
+- Frame :x:
+- BinanceChain :x:
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+## Usage
 
-1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+1. Install @whitelabel-solutions/wallet-connector NPM package
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+```bash
+npm install --save @whitelabel-solutions/wallet-connector
+
+# OR
+
+yarn add @whitelabel-solutions/wallet-connector
+```
+
+2. Install Provider packages
+
+```js
+import Connector from "@whitelabel-solutions/wallet-connector";
+
+const providers = Connector.init({
+    appName: "",
+    infuraId: "",
+    authereum: { key: "" },
+    fortmatic: { key: "" },
+}).providers;
+```
+
+3. Then you can add @whitelabel-solutions/wallet-connector as follows
+
+```vue
+<template>
+    <ul>
+        <li v-for="provider of providers" :key="provider.name">
+            <button @click.prevent="provider.connect">
+                {{ provider.name }}
+            </button>
+        </li>
+    </ul>
+</template>
+
+<script lang="ts" setup>
+import Connector from "@whitelabel-solutions/wallet-connector";
+
+const providers = Connector.init({
+    appName: "",
+    infuraId: "",
+    authereum: { key: "" },
+    fortmatic: { key: "" },
+}).providers;
+</script>
+```
+
+## Options
+
+These are all the options to configure the providers:
+```ts
+type ConnectorUserOptions = {
+    appName: string;
+    appLogoUrl?: string;
+    networkName?: string;
+    chainId?: number;
+    rpcUri?: string;
+    webUri?: string;
+    xsUri?: string;
+    infuraId: string;
+    infuraRpcUri?: string;
+    authereum: {
+        key: string;
+        blockedPopupRedirect?: boolean;
+        forceRedirect?: boolean;
+        disableNotifications?: boolean;
+        disableGoogleAnalytics?: boolean;
+    };
+    fortmatic: {
+        key: string;
+    };
+    walletconnect?: {
+        bridge?: string;
+        qrcode?: boolean;
+        qrcodeModalOptions?: object;
+    };
+    walletlink?: {
+        darkMode?: boolean;
+    };
+};
+```
+
+## License
+
+MIT
