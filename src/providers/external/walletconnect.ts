@@ -1,31 +1,29 @@
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { ProviderType, type IProvider, ConnectorOptions } from "@/types";
+import _WalletConnectProvider from "@walletconnect/web3-provider";
+import { ProviderType, ConnectorOptions } from "@/types";
 import { WalletConnectLogo } from "@/providers/logos";
+import ExternalProvider from "@/providers/models/externalProvider";
 
-const ConnectToWalletConnect = (options: ConnectorOptions) => {
-    return new Promise((resolve, reject) => {
-        const provider = new WalletConnectProvider({
-            bridge: options.walletconnect?.bridge,
-            qrcode: options.walletconnect?.qrcode,
-            infuraId: options.infuraId,
-            rpc: options.rpcUri,
-            chainId: options.chainId,
-            qrcodeModalOptions: options.walletconnect?.qrcodeModalOptions,
+export default class WalletConnectProvider extends ExternalProvider {
+    constructor(options: ConnectorOptions) {
+        super("WalletConnect", WalletConnectLogo, ProviderType.QRCODE, options);
+    }
+
+    connect() {
+        return new Promise((resolve, reject) => {
+            const provider = new _WalletConnectProvider({
+                bridge: this.options.walletconnect?.bridge,
+                qrcode: this.options.walletconnect?.qrcode,
+                infuraId: this.options.infuraId,
+                rpc: this.options.rpcUri,
+                chainId: this.options.chainId,
+                qrcodeModalOptions:
+                    this.options.walletconnect?.qrcodeModalOptions,
+            });
+            try {
+                resolve(provider.enable());
+            } catch (e) {
+                reject(e);
+            }
         });
-        try {
-            resolve(provider.enable());
-        } catch (e) {
-            reject(e);
-        }
-    });
-};
-
-const WALLETCONNECT: IProvider = {
-    id: "walletconnect",
-    name: "WalletConnect",
-    logo: WalletConnectLogo,
-    type: ProviderType.QRCODE,
-    connect: ConnectToWalletConnect,
-};
-
-export default WALLETCONNECT;
+    }
+}

@@ -1,10 +1,15 @@
-import _providers from "@/providers";
-
 import {
     IProvider,
     type ConnectorUserOptions,
-    ConnectorOptions,
+    type ConnectorOptions,
 } from "@/types";
+import AuthereumProvider from "@/providers/external/authereum";
+import BinanceChainProvider from "@/providers/external/binancechainwallet";
+import MetaMaskProvider from "@/providers/injected/metamask";
+import FortmaticProvider from "@/providers/external/fortmatic";
+import FrameProvider from "@/providers/external/frame";
+import WalletConnectProvider from "@/providers/external/walletconnect";
+import WalletLinkProvider from "@/providers/external/walletlink";
 
 export default class Connector {
     private options: ConnectorOptions;
@@ -57,12 +62,15 @@ export default class Connector {
         };
     }
 
-    private static initProviders(opts: ConnectorOptions): Array<IProvider> {
-        return _providers.map(
-            (p: IProvider): IProvider => ({
-                ...p,
-                connect: () => p.connect(opts),
-            })
-        );
+    private static initProviders(options: ConnectorOptions): Array<IProvider> {
+        return [
+            new MetaMaskProvider(),
+            new WalletLinkProvider(options),
+            new WalletConnectProvider(options),
+            new AuthereumProvider(options),
+            new BinanceChainProvider(options),
+            new FortmaticProvider(options),
+            new FrameProvider(options),
+        ];
     }
 }

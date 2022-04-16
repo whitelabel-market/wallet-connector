@@ -1,28 +1,25 @@
 import Fortmatic from "fortmatic";
-import { ProviderType, type IProvider, ConnectorOptions } from "@/types";
+import { ProviderType, ConnectorOptions } from "@/types";
 import { FortmaticLogo } from "@/providers/logos";
+import ExternalProvider from "@/providers/models/externalProvider";
 
-const ConnectToFortmatic = async (options: ConnectorOptions) => {
-    const key = options.fortmatic.key;
-    const network = options.networkName;
-    const fm = new Fortmatic(key, network);
-    const provider = await fm.getProvider();
-    // provider.fm = fm;
-    await fm.user.login();
-    const isLoggedIn = await fm.user.isLoggedIn();
-    if (isLoggedIn) {
-        return provider;
-    } else {
-        throw new Error("Failed to login to Fortmatic");
+export default class FortmaticProvider extends ExternalProvider {
+    constructor(options: ConnectorOptions) {
+        super("Fortmatic", FortmaticLogo, ProviderType.WEB, options);
     }
-};
 
-const FORTMATIC: IProvider = {
-    id: "fortmatic",
-    name: "Fortmatic",
-    logo: FortmaticLogo,
-    type: ProviderType.WEB,
-    connect: ConnectToFortmatic,
-};
-
-export default FORTMATIC;
+    async connect() {
+        const key = this.options.fortmatic.key;
+        const network = this.options.networkName;
+        const fm = new Fortmatic(key, network);
+        const provider = await fm.getProvider();
+        // provider.fm = fm;
+        await fm.user.login();
+        const isLoggedIn = await fm.user.isLoggedIn();
+        if (isLoggedIn) {
+            return provider;
+        } else {
+            throw new Error("Failed to login to Fortmatic");
+        }
+    }
+}

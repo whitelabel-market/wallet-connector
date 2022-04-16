@@ -1,6 +1,7 @@
 import { Authereum } from "authereum/dist";
-import { ProviderType, type IProvider, ConnectorOptions } from "@/types";
+import { ProviderType, ConnectorOptions } from "@/types";
 import { AuthereumLogo } from "@/providers/logos";
+import ExternalProvider from "@/providers/models/externalProvider";
 
 type AuthereumOptionsType = {
     apiKey?: string;
@@ -14,37 +15,34 @@ type AuthereumOptionsType = {
     disableGoogleAnalytics?: boolean;
 };
 
-const ConnectToAuthereum = (options: ConnectorOptions) => {
-    const authereumOptions: AuthereumOptionsType = {
-        apiKey: options.authereum.key,
-        networkName: options.networkName,
-        rpcUri: options.rpcUri,
-        webUri: options.webUri,
-        xsUri: options.webUri,
-        blockedPopupRedirect: options.authereum.blockedPopupRedirect,
-        forceRedirect: options.authereum.forceRedirect,
-        disableNotifications: options.authereum.disableNotifications,
-        disableGoogleAnalytics: options.authereum.disableGoogleAnalytics,
-    };
+export default class AuthereumProvider extends ExternalProvider {
+    constructor(options: ConnectorOptions) {
+        super("Authereum", AuthereumLogo, ProviderType.WEB, options);
+    }
 
-    return new Promise((resolve, reject) => {
-        try {
-            const authereum = new Authereum(authereumOptions);
-            const provider = authereum.getProvider();
-            provider.authereum = authereum;
-            resolve(provider.enable());
-        } catch (error) {
-            return reject(error);
-        }
-    });
-};
+    async connect() {
+        const authereumOptions: AuthereumOptionsType = {
+            apiKey: this.options.authereum.key,
+            networkName: this.options.networkName,
+            rpcUri: this.options.rpcUri,
+            webUri: this.options.webUri,
+            xsUri: this.options.webUri,
+            blockedPopupRedirect: this.options.authereum.blockedPopupRedirect,
+            forceRedirect: this.options.authereum.forceRedirect,
+            disableNotifications: this.options.authereum.disableNotifications,
+            disableGoogleAnalytics:
+                this.options.authereum.disableGoogleAnalytics,
+        };
 
-const AUTHEREUM: IProvider = {
-    id: "authereum",
-    name: "Authereum",
-    logo: AuthereumLogo,
-    type: ProviderType.WEB,
-    connect: ConnectToAuthereum,
-};
-
-export default AUTHEREUM;
+        return new Promise((resolve, reject) => {
+            try {
+                const authereum = new Authereum(authereumOptions);
+                const provider = authereum.getProvider();
+                provider.authereum = authereum;
+                resolve(provider.enable());
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
+}

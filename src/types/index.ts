@@ -19,14 +19,16 @@ export enum ProviderType {
     WEB,
 }
 
-interface IProviderBase<T> {
+export type ConnectFn = (args?: unknown) => Promise<unknown>;
+
+interface IProviderBase {
     name: string;
     logo: string;
     type: ProviderType;
-    connect: (options: ConnectorOptions) => Promise<unknown>;
+    connect: ConnectFn;
 }
 
-export interface IProvider<T = {}> extends IProviderBase<T> {
+export interface IProvider extends IProviderBase {
     id: string;
 }
 

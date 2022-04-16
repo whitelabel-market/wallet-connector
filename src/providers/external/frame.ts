@@ -1,17 +1,14 @@
 import ethProvider from "eth-provider";
-import { ProviderType, type IProvider, ConnectorOptions } from "@/types";
+import { ProviderType, ConnectorOptions } from "@/types";
 import { FrameLogo } from "@/providers/logos";
+import ExternalProvider from "@/providers/models/externalProvider";
 
-const ConnectToFrame = async (options: ConnectorOptions) => {
-    return ethProvider("frame");
-};
+export default class FrameProvider extends ExternalProvider {
+    constructor(options: ConnectorOptions) {
+        super("Frame", FrameLogo, ProviderType.WEB, options);
+    }
 
-const FRAME: IProvider = {
-    id: "frame",
-    name: "Frame",
-    logo: FrameLogo,
-    type: ProviderType.WEB,
-    connect: ConnectToFrame,
-};
-
-export default FRAME;
+    connect() {
+        return ethProvider("frame");
+    }
+}

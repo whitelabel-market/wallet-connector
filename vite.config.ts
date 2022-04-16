@@ -10,7 +10,7 @@ export default defineConfig({
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "wallet-connector",
-            fileName: (format) => `wallet-connector.${format}.ts`,
+            fileName: (format) => `wallet-connector.${format}.js`,
         },
         rollupOptions: {
             external: ["vue"],
