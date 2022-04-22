@@ -1,3 +1,6 @@
-import connector from "./core";
+import { Core } from "./core/";
 
-export default connector;
+const { Connector } = Core;
+
+export { Providers } from "./providers/";
+export default Connector;

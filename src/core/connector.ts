@@ -1,36 +1,42 @@
-import {
-    IProvider,
-    type ConnectorUserOptions,
-    type ConnectorOptions,
-} from "@/types";
-import AuthereumProvider from "@/providers/external/authereum";
-import BinanceChainProvider from "@/providers/external/binancechainwallet";
-import MetaMaskProvider from "@/providers/injected/metamask";
-import FortmaticProvider from "@/providers/external/fortmatic";
-import FrameProvider from "@/providers/external/frame";
-import WalletConnectProvider from "@/providers/external/walletconnect";
-import WalletLinkProvider from "@/providers/external/walletlink";
+import { type ConnectorUserOptions, type ConnectorOptions } from "../types";
+import { Providers } from "../providers/";
+import LocalStorage from "../helpers/localStorage";
+import { BaseProvider } from "./BaseProvider";
 
-export default class Connector {
+export class Connector {
     private options: ConnectorOptions;
-    public providers: IProvider[];
+    public providers: BaseProvider[];
+    public localStorage: LocalStorage;
 
-    constructor(options: ConnectorOptions, providers: IProvider[]) {
+    constructor(
+        options: ConnectorOptions,
+        providers: BaseProvider[],
+        localStorage: LocalStorage
+    ) {
         this.options = options;
         this.providers = providers;
+        this.localStorage = localStorage;
     }
 
-    static init(userOptions: ConnectorUserOptions): Connector {
+    static init(
+        userOptions: ConnectorUserOptions,
+        userProviders = Object.values(Providers)
+    ): Connector {
+        const localStorage = new LocalStorage();
         const options = Connector.initOptions(userOptions);
-        const providers = Connector.initProviders(options);
-        return new Connector(options, providers);
+        const providers = Connector.initProviders(
+            options,
+            userProviders,
+            localStorage
+        );
+        return new Connector(options, providers, localStorage);
     }
 
     private static initOptions(
         options: ConnectorUserOptions
     ): ConnectorOptions {
         return {
-            appName: options.appName, // required
+            appName: options.appName,
             appLogoUrl: options.appLogoUrl || undefined,
             networkName: options.networkName || "",
             chainId: options.chainId || 1,
@@ -62,15 +68,13 @@ export default class Connector {
         };
     }
 
-    private static initProviders(options: ConnectorOptions): Array<IProvider> {
-        return [
-            new MetaMaskProvider(),
-            new WalletLinkProvider(options),
-            new WalletConnectProvider(options),
-            new AuthereumProvider(options),
-            new BinanceChainProvider(options),
-            new FortmaticProvider(options),
-            new FrameProvider(options),
-        ];
+    private static initProviders(
+        options: ConnectorOptions,
+        providers: BaseProvider[],
+        localStorage: LocalStorage
+    ): BaseProvider[] {
+        return Object.values(providers).map((provider) =>
+            provider.init(options, localStorage)
+        );
     }
 }

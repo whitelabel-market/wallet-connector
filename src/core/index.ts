@@ -1,3 +1,11 @@
-import connector from "./connector";
+import { Connector } from "./Connector";
+import { BaseProvider } from "./BaseProvider";
+import { ExternalProvider } from "./ExternalProvider";
+import { InjectedProvider } from "./InjectedProvider";
 
-export default connector;
+export const Core = {
+  Connector,
+  BaseProvider,
+  ExternalProvider,
+  InjectedProvider,
+};
