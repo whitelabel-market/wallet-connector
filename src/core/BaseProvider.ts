@@ -1,9 +1,14 @@
-import { ProviderType, ConnectorOptions, ConnectResult } from "../types";
+import {
+    ProviderType,
+    ConnectorOptions,
+    ConnectResult,
+    IProvider,
+} from "../types";
 import generateId from "../helpers/generateId";
 import LocalStorage from "../helpers/localStorage";
 import { parseChainId, validateChainId } from "../helpers/chainId";
 
-export abstract class BaseProvider {
+export abstract class BaseProvider implements IProvider {
     public id: string;
     public name: string;
     public logo: string;

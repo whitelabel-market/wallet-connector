@@ -1,6 +1,7 @@
-import { Core } from "./core/";
+import Core from "./core/";
+import Providers from "./providers/";
+import { IProvider, ConnectorUserOptions, ProviderType } from "./types/";
 
 const { Connector } = Core;
 
-export { Providers } from "./providers/";
-export default Connector;
+export { Connector, Providers, IProvider, ConnectorUserOptions, ProviderType };

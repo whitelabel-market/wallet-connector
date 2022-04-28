@@ -3,9 +3,9 @@ import { BaseProvider } from "./BaseProvider";
 import { ExternalProvider } from "./ExternalProvider";
 import { InjectedProvider } from "./InjectedProvider";
 
-export const Core = {
-  Connector,
-  BaseProvider,
-  ExternalProvider,
-  InjectedProvider,
+export default {
+    Connector,
+    BaseProvider,
+    ExternalProvider,
+    InjectedProvider,
 };
