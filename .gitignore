@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.cache
+*.tgz
+coverage
+temp  
+.temp
+dist
