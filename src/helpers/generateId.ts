@@ -1,3 +1,3 @@
 export default (name: string) => {
-  return name.toLowerCase().replace(/\s/g, "");
+    return name.toLowerCase().replace(/\s/g, "");
 };
