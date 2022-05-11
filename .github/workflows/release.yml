@@ -16,7 +16,7 @@ jobs:
                   fetch-depth: 0
 
             - name: Install yarn
-              uses: yarn/action-setup@v2
+              run: npm install -g yarn
 
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v3
