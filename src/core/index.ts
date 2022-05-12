@@ -1,11 +1,11 @@
-export { Connector } from "./Connector";
-export { BaseProvider } from "./BaseProvider";
-export { ExternalProvider } from "./ExternalProvider";
-export { InjectedProvider } from "./InjectedProvider";
+import { Connector } from "./connector";
+import { BaseProvider } from "./BaseProvider";
+import { ExternalProvider } from "./ExternalProvider";
+import { InjectedProvider } from "./InjectedProvider";
 
-// export default {
-//     Connector,
-//     BaseProvider,
-//     ExternalProvider,
-//     InjectedProvider,
-// };
+export default {
+    Connector,
+    BaseProvider,
+    ExternalProvider,
+    InjectedProvider,
+};
