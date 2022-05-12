@@ -64,7 +64,6 @@ jobs:
     release:
         runs-on: ubuntu-latest
         needs: [lint, test]
-        if: ${{ github.ref == 'refs/heads/main' }}
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -85,5 +84,5 @@ jobs:
 
             - name: Release
               env:
-                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.PAT }}
               run: yarn semantic-release

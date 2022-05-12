@@ -22,6 +22,14 @@ export class InjectedProvider extends BaseProvider {
         } else {
             throw new Error("No Web3 Provider found");
         }
+
+        if (provider?.providers?.length) {
+            if (this.name.toLowerCase() === "metamask")
+                provider = provider.providers.find(
+                    (provider: any) => provider.isMetaMask
+                );
+        }
+
         return provider;
     }
 }
