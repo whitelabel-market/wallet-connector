@@ -27,12 +27,7 @@ jobs:
 
             - run: yarn install --ignore-engines
 
-            # - name: Release
-            #   env:
-            #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-            #   run: yarn semantic-release
-
-            # - run: yarn run publish:npm
-            #   env:
-            #       NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            #       NODE_OPTIONS: --max-old-space-size=6144
+            - run: yarn run publish:npm
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+                  NODE_OPTIONS: --max-old-space-size=6144
