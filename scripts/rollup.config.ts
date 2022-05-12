@@ -86,7 +86,16 @@ for (const { name, external, target } of packages) {
             input,
             output,
             plugins: [
-                nodeResolve(),
+                nodeResolve({
+                    extensions: [
+                        ".mjs",
+                        ".cjs",
+                        ".ts",
+                        ".js",
+                        ".json",
+                        ".node",
+                    ],
+                }),
                 peerDepsExternal(),
                 target ? esbuild({ target }) : esbuildPlugin,
                 json(),
