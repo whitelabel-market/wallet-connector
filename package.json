@@ -27,8 +27,7 @@
             "import": "./index.mjs",
             "require": "./index.cjs",
             "types": "./index.d.ts"
-        },
-        "./*": "./*"
+        }
     },
     "sideEffects": false,
     "scripts": {
