@@ -3,7 +3,7 @@ import consola from "consola";
 import { version } from "../package.json";
 import { packages } from "../meta/packages";
 
-execSync("pnpm run build", { stdio: "inherit" });
+execSync("yarn build", { stdio: "inherit" });
 
 let command = "npm publish --access public";
 

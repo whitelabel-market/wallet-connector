@@ -1,5 +1,9 @@
 # @whitelabel-solutions/wallet-connector
 
+[![NPM version](https://img.shields.io/npm/v/@whitelabel-solutions/wallet-connector?color=a1b858&label=)](https://www.npmjs.com/package/[name])
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 A Web3 Ethereum provider solution for multiple Wallets
 
 ## Introduction
@@ -7,13 +11,14 @@ A Web3 Ethereum provider solution for multiple Wallets
 @whitelabel-solutions/wallet-connector is an easy-to-use library to support Whitelabel Solutions providing wallet connect feature in their DApps.
 
 It currently supports following providers (:ballot_box_with_check: = Working, :warning: = Not tested, :x: = Not working):
-- Metamask (injected) :ballot_box_with_check:
-- Coinbase Wallet :warning:
-- WalletConnect :warning:
-- Fortmatic :warning:
-- Authereum :x:
-- Frame :x:
-- BinanceChain :x:
+
+-   Metamask (injected) :ballot_box_with_check:
+-   Coinbase Wallet :warning:
+-   WalletConnect :warning:
+-   Fortmatic :warning:
+-   Authereum :x:
+-   Frame :x:
+-   BinanceChain :x:
 
 ## Usage
 
@@ -68,6 +73,7 @@ const providers = Connector.init({
 ## Options
 
 These are all the options to configure the providers:
+
 ```ts
 type ConnectorUserOptions = {
     appName: string;
