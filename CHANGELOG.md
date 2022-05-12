@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.0...v1.0.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* **injectedprovider.ts:** use metamask provider from multiple providers on metamask wallet selection ([39a4f7a](https://github.com/whitelabel-market/wallet-connector/commit/39a4f7a03f24286964afcc22b35638320e9ba126))
+
 # 1.0.0 (2022-05-12)
 
 
