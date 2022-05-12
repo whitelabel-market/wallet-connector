@@ -6,6 +6,7 @@ import json from "@rollup/plugin-json";
 import type { OutputOptions, RollupOptions } from "rollup";
 import { packages } from "../meta/packages";
 import svg from "rollup-plugin-svg";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 const configs: RollupOptions[] = [];
 
@@ -85,6 +86,7 @@ for (const { name, external, target } of packages) {
             input,
             output,
             plugins: [
+                nodeResolve(),
                 peerDepsExternal(),
                 target ? esbuild({ target }) : esbuildPlugin,
                 json(),
