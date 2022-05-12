@@ -47,10 +47,10 @@ async function buildMetaFiles() {
 
 async function build() {
     consola.info("Clean up");
-    exec("yarn clean", { stdio: "inherit" });
+    exec("npm run clean", { stdio: "inherit" });
 
     consola.info("Rollup");
-    exec(`yarn build:rollup${watch ? " -- --watch" : ""}`, {
+    exec(`npm run build:rollup${watch ? " -- --watch" : ""}`, {
         stdio: "inherit",
     });
 
