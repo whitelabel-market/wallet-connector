@@ -28,7 +28,7 @@ jobs:
               run: yarn global add @antfu/ni
 
             - name: Install
-              run: nci
+              run: nci --ignore-engines
 
             - name: Lint
               run: nr lint
@@ -59,7 +59,7 @@ jobs:
               run: yarn global add @antfu/ni
 
             - name: Install
-              run: nci
+              run: nci --ignore-engines
 
             - name: Build
               run: nr build
