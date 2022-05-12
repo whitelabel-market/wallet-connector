@@ -1,10 +1,6 @@
-import Core from "./core/index";
-import Providers from "./providers/index";
-import type {
-    IProvider,
-    ConnectorUserOptions,
-    ProviderType,
-} from "./types/index";
+import Core from "./core";
+import Providers from "./providers";
+import type { IProvider, ConnectorUserOptions, ProviderType } from "./types";
 
 const { Connector } = Core;
 
