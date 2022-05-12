@@ -1,27 +1,24 @@
 {
     "compilerOptions": {
         "target": "es2017",
-        "useDefineForClassFields": true,
         "module": "esnext",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "moduleResolution": "node",
-        "strict": true,
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./src/*"]
-        },
-        "jsx": "preserve",
-        "sourceMap": true,
-        "resolveJsonModule": true,
-        "isolatedModules": false,
         "esModuleInterop": true,
-        "lib": ["esnext", "dom"],
+        "strict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "declaration": true,
+        "declarationDir": "./types",
+        "resolveJsonModule": true,
+        "rootDir": ".",
+        "baseUrl": ".",
+        "jsx": "preserve",
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "noUnusedLocals": true,
         "types": ["node"]
     },
-    "include": ["src"],
-    "exclude": ["dist", "node_modules", "**/dist", "**/node_modules"],
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ]
+    "include": ["test", "src"],
+    "exclude": ["dist", "node_modules", "**/dist", "**/node_modules"]
 }

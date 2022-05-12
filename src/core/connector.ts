@@ -4,7 +4,7 @@ import LocalStorage from "../helpers/localStorage";
 import { BaseProvider } from "./BaseProvider";
 
 export class Connector {
-    private options: ConnectorOptions;
+    public options: ConnectorOptions;
     public providers: BaseProvider[];
     public localStorage: LocalStorage;
 
