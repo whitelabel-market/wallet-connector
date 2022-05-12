@@ -24,14 +24,11 @@ jobs:
                   node-version: 16.x
                   cache: yarn
 
-            - name: Setup
-              run: yarn global add @antfu/ni
-
             - name: Install
-              run: nci --ignore-engines
+              run: yarn install --ignore-engines
 
             - name: Lint
-              run: nr lint
+              run: yarn lint
 
     test:
         runs-on: ${{ matrix.os }}
@@ -55,14 +52,11 @@ jobs:
                   node-version: ${{ matrix.node }}
                   cache: yarn
 
-            - name: Setup
-              run: yarn global add @antfu/ni
-
             - name: Install
-              run: nci --ignore-engines
+              run: yarn install --ignore-engines
 
             - name: Build
-              run: nr build
+              run: yarn build
 
             - name: Typecheck
-              run: nr typecheck
+              run: yarn typecheck
