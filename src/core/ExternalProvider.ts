@@ -1,5 +1,5 @@
-import { ConnectFn, ProviderType } from '@wallet-connector/types'
-import { BaseProvider } from '@wallet-connector/core/BaseProvider'
+import { ConnectFn, ProviderType } from '../types'
+import { BaseProvider } from './BaseProvider'
 
 export class ExternalProvider extends BaseProvider {
     protected onConnect!: ConnectFn

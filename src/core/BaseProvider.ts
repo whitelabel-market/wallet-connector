@@ -1,7 +1,7 @@
-import { ProviderType, ConnectorOptions, ConnectResult, IProvider } from '@wallet-connector/types'
-import generateId from '@wallet-connector/helpers/generateId'
-import LocalStorage from '@wallet-connector/helpers/localStorage'
-import { parseChainId, validateChainId } from '@wallet-connector/helpers/chainId'
+import { ProviderType, ConnectorOptions, ConnectResult, IProvider } from '../types'
+import generateId from '../helpers/generateId'
+import LocalStorage from '../helpers/localStorage'
+import { parseChainId, validateChainId } from '../helpers/chainId'
 
 export abstract class BaseProvider implements IProvider {
     public id: string

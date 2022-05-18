@@ -1,7 +1,7 @@
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import { ProviderType, ConnectorOptions } from '@wallet-connector/types'
+import { ProviderType, ConnectorOptions } from '../../types'
 import Logo from './logo.svg'
-import { ExternalProvider } from '@wallet-connector/core/ExternalProvider'
+import { ExternalProvider } from '../../core/ExternalProvider'
 
 function onConnect(options: ConnectorOptions) {
     const provider = new WalletConnectProvider({

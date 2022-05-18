@@ -13,9 +13,6 @@
         "resolveJsonModule": true,
         "rootDir": ".",
         "baseUrl": ".",
-        "paths": {
-            "@wallet-connector/*": ["src/*"],
-        },
         "jsx": "preserve",
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,

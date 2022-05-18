@@ -1,6 +1,6 @@
-import { ProviderType } from '@wallet-connector/types'
+import { ProviderType } from '../../types'
 import Logo from './logo.svg'
-import { ExternalProvider } from '@wallet-connector/core/ExternalProvider'
+import { ExternalProvider } from '../../core/ExternalProvider'
 
 const onConnect = async () => {
     let provider = null

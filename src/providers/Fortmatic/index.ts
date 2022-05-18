@@ -1,7 +1,7 @@
 import Fortmatic from 'fortmatic'
-import { ProviderType, ConnectorOptions } from '@wallet-connector/types'
+import { ProviderType, ConnectorOptions } from '../../types'
 import Logo from './logo.svg'
-import { ExternalProvider } from '@wallet-connector/core/ExternalProvider'
+import { ExternalProvider } from '../../core/ExternalProvider'
 
 async function onConnect(options: ConnectorOptions) {
     const key = options.fortmatic.key
