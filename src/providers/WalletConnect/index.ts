@@ -1,7 +1,7 @@
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { ProviderType, ConnectorOptions } from "../../types";
-import Logo from "./logo.svg";
-import { ExternalProvider } from "../../core/ExternalProvider";
+import WalletConnectProvider from '@walletconnect/web3-provider'
+import { ProviderType, ConnectorOptions } from '../../types'
+import Logo from './logo.svg'
+import { ExternalProvider } from '../../core/ExternalProvider'
 
 function onConnect(options: ConnectorOptions) {
     const provider = new WalletConnectProvider({
@@ -11,14 +11,9 @@ function onConnect(options: ConnectorOptions) {
         rpc: options.rpcUri,
         chainId: options.chainId,
         qrcodeModalOptions: options.walletconnect?.qrcodeModalOptions,
-    });
+    })
 
-    return provider.enable();
+    return provider.enable()
 }
 
-export default new ExternalProvider(
-    "WalletConnect",
-    Logo,
-    ProviderType.QRCODE,
-    onConnect
-);
+export default new ExternalProvider('WalletConnect', Logo, ProviderType.QRCODE, onConnect)
