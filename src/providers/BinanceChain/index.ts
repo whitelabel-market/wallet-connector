@@ -1,4 +1,3 @@
-import { ProviderType } from '../../types'
 import Logo from './logo.svg'
 import { ExternalProvider } from '../../core/ExternalProvider'
 

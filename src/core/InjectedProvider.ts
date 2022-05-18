@@ -1,4 +1,3 @@
-import { ProviderType } from '../types'
 import { BaseProvider } from './BaseProvider'
 
 export class InjectedProvider extends BaseProvider {

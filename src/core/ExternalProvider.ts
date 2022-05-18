@@ -1,4 +1,3 @@
-import { ConnectFn, ProviderType } from '../types'
 import { BaseProvider } from './BaseProvider'
 
 export class ExternalProvider extends BaseProvider {

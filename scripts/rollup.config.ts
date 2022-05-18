@@ -97,7 +97,7 @@ for (const { name, external, target } of packages) {
         })
 
         configs.push({
-            input,
+            input: [input],
             output: {
                 file: `./dist/${fn}.d.ts`,
                 format: 'es',

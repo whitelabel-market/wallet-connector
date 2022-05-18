@@ -1,5 +1,4 @@
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import { ProviderType, ConnectorOptions } from '../../types'
 import Logo from './logo.svg'
 import { ExternalProvider } from '../../core/ExternalProvider'
 

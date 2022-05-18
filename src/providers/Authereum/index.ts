@@ -1,5 +1,4 @@
 import { Authereum } from 'authereum/dist'
-import { ProviderType, ConnectorOptions } from '../../types'
 import Logo from './logo.svg'
 import { ExternalProvider } from '../../core/ExternalProvider'
 

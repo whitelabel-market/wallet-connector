@@ -1,4 +1,3 @@
-import { ProviderType, ConnectorOptions, ConnectResult, IProvider } from '../types'
 import generateId from '../helpers/generateId'
 import LocalStorage from '../helpers/localStorage'
 import { parseChainId, validateChainId } from '../helpers/chainId'

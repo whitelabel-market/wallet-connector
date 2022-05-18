@@ -1,12 +1,24 @@
-export enum ProviderType {
+declare module 'eth-provider'
+declare module 'web3-provider-engine'
+declare module '@coinbase/wallet-sdk'
+declare module '@walletconnect/web3-provider'
+declare module 'authereum/dist'
+declare module 'fortmatic'
+
+declare module '*.svg' {
+    const content: any
+    export default content
+}
+
+declare enum ProviderType {
     INJECTED,
     QRCODE,
     WEB,
 }
-export type ConnectResult = any | Promise<any>
-export type ConnectFn = (options: ConnectorOptions) => ConnectResult
+declare type ConnectResult = any | Promise<any>
+declare type ConnectFn = (options: ConnectorOptions) => ConnectResult
 
-export interface IProvider {
+declare interface IProvider {
     id: string
     name: string
     logo: string
@@ -14,7 +26,7 @@ export interface IProvider {
     connect: () => ConnectResult
 }
 
-export type ConnectorUserOptions = {
+declare type ConnectorUserOptions = {
     appName: string
     appLogoUrl?: string
     networkName?: string
@@ -44,4 +56,4 @@ export type ConnectorUserOptions = {
     }
 }
 
-export type ConnectorOptions = ConnectorUserOptions
+declare type ConnectorOptions = ConnectorUserOptions
