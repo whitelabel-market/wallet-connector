@@ -1,52 +1,49 @@
 export default class LocalStorage {
-    storage?: WindowLocalStorage["localStorage"];
-    enabled = false;
+    storage?: WindowLocalStorage['localStorage']
+    enabled = false
 
     constructor() {
-        if (
-            typeof window !== "undefined" &&
-            typeof window.localStorage !== "undefined"
-        ) {
-            this.storage = window.localStorage;
-            this.enabled = true;
+        if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+            this.storage = window.localStorage
+            this.enabled = true
         }
     }
 
     set(key: string, data: any) {
-        const jsonData = JSON.stringify(data);
+        const jsonData = JSON.stringify(data)
         if (this.enabled) {
-            this.storage?.setItem(key, jsonData);
+            this.storage?.setItem(key, jsonData)
         }
     }
 
     get(key: string) {
-        let data = null;
-        let raw = null;
+        let data = null
+        let raw = null
         if (this.enabled) {
-            raw = this.storage?.getItem(key);
+            raw = this.storage?.getItem(key)
         }
-        if (raw && typeof raw === "string") {
+        if (raw && typeof raw === 'string') {
             try {
-                data = JSON.parse(raw);
+                data = JSON.parse(raw)
             } catch (error) {
-                return null;
+                return null
             }
         }
-        return data;
+        return data
     }
 
     remove(key: string) {
         if (this.enabled) {
-            this.storage?.removeItem(key);
+            this.storage?.removeItem(key)
         }
     }
 
     update(key: string, data: any) {
-        const localData = this.get(key) || {};
+        const localData = this.get(key) || {}
         const mergedData = {
             ...localData,
             ...data,
-        };
-        this.set(key, mergedData);
+        }
+        this.set(key, mergedData)
     }
 }

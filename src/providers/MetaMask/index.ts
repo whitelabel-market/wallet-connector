@@ -1,4 +1,4 @@
-import Logo from "./logo.svg";
-import { InjectedProvider } from "../../core/InjectedProvider";
+import Logo from './logo.svg'
+import { InjectedProvider } from '../../core/InjectedProvider'
 
-export default new InjectedProvider("MetaMask", Logo);
+export default new InjectedProvider('MetaMask', Logo)
