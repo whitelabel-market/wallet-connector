@@ -1,7 +1,7 @@
 import { Authereum } from 'authereum/dist'
-import { ProviderType, ConnectorOptions } from '../../types'
+import { ProviderType, ConnectorOptions } from '@wallet-connector/types'
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { ExternalProvider } from '@wallet-connector/core/ExternalProvider'
 
 function onConnect(options: ConnectorOptions) {
     const authereum = new Authereum({

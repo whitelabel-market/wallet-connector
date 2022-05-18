@@ -1,7 +1,7 @@
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
-import { ProviderType, ConnectorOptions } from '../../types'
+import { ProviderType, ConnectorOptions } from '@wallet-connector/types'
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { ExternalProvider } from '@wallet-connector/core/ExternalProvider'
 
 async function onConnect(options: ConnectorOptions) {
     const chainId = options.chainId

@@ -1,5 +1,5 @@
-import { ProviderType } from '../types'
-import { BaseProvider } from './BaseProvider'
+import { ProviderType } from '@wallet-connector/types'
+import { BaseProvider } from '@wallet-connector/core/BaseProvider'
 
 export class InjectedProvider extends BaseProvider {
     constructor(name: string, logo: string) {

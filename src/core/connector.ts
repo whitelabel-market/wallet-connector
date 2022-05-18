@@ -1,7 +1,7 @@
 import { type ConnectorUserOptions, type ConnectorOptions } from '../types'
-import Providers from '../providers/'
-import LocalStorage from '../helpers/localStorage'
-import { BaseProvider } from './BaseProvider'
+import Providers from '@wallet-connector/providers/'
+import LocalStorage from '@wallet-connector/helpers/localStorage'
+import { BaseProvider } from '@wallet-connector/core/BaseProvider'
 
 export class Connector {
     public options: ConnectorOptions

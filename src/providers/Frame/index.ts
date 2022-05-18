@@ -1,7 +1,7 @@
 import ethProvider from 'eth-provider'
-import { ProviderType } from '../../types'
+import { ProviderType } from '@wallet-connector/types'
 import FrameLogo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { ExternalProvider } from '@wallet-connector/core/ExternalProvider'
 
 async function onConnect() {
     return ethProvider('frame')
