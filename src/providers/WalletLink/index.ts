@@ -1,4 +1,4 @@
-import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import { ProviderType, ConnectorOptions } from "../../types";
 import Logo from "./logo.svg";
 import { ExternalProvider } from "../../core/ExternalProvider";
