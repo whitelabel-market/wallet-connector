@@ -39,7 +39,7 @@ export abstract class BaseProvider implements IProvider {
         }
         const provider = await this.onConnect(this.options);
         const chainId = parseChainId(provider.chainId);
-        validateChainId(chainId, this.options.chainId || 1);
+        if (chainId) validateChainId(chainId, this.options.chainId || 1);
         this.localStorage.set(BaseProvider.CACHED_PROVIDER_KEY, this.id);
         return provider;
     }

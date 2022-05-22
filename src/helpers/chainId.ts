@@ -13,7 +13,11 @@ export const validateChainId = (chainId: number, allowedChainId: number) => {
     }
 };
 
-export const parseChainId = (chainId: string | number) =>
-    typeof chainId === "number"
-        ? chainId
-        : Number.parseInt(chainId, chainId.startsWith("0x") ? 16 : 10);
+export const parseChainId = (chainId: string | number) => {
+    if (chainId) {
+        typeof chainId === "number"
+            ? chainId
+            : Number.parseInt(chainId, chainId.startsWith("0x") ? 16 : 10);
+    }
+    return 0;
+};
