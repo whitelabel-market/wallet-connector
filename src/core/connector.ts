@@ -1,4 +1,4 @@
-import { type ConnectorUserOptions, type ConnectorOptions } from "../types";
+import type { ConnectorUserOptions, ConnectorOptions } from "../types";
 import Providers from "../providers/";
 import LocalStorage from "../helpers/localStorage";
 import { BaseProvider } from "./BaseProvider";
