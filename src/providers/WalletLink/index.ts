@@ -1,4 +1,4 @@
-import CoinbaseWalletSDK, { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
+import { CoinbaseWalletSDK, CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
 import { AbstractExternalProvider } from '../../core/ExternalProvider'
 import { ProviderType } from '../../types'
