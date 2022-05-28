@@ -49,10 +49,10 @@ export class Connector {
                 `https://mainnet.infura.io/v3/${options.infuraId}`,
             authereum: {
                 ...options.authereum,
-                key: options.authereum.key, // required
+                key: options.authereum?.key || "",
             },
             fortmatic: {
-                key: options.fortmatic.key, // required
+                key: options.fortmatic?.key || "",
             },
             walletconnect: {
                 bridge:
@@ -61,6 +61,7 @@ export class Connector {
                 qrcode: options.walletconnect?.qrcode || true,
                 qrcodeModalOptions:
                     options.walletconnect?.qrcodeModalOptions || undefined,
+                rpc: options.walletconnect?.rpc
             },
             walletlink: {
                 darkMode: options.walletlink?.darkMode || false,

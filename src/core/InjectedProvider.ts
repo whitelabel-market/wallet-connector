@@ -20,11 +20,16 @@ export class InjectedProvider extends BaseProvider {
         } else if ((window as any)?.celo) {
             provider = (window as any).celo;
         } else {
+            if(this.id === "metamask"){
+                window.open("https://metamask.io/download/", "_blank")
+            }
+
             throw new Error("No Web3 Provider found");
         }
 
+
         if (provider?.providers?.length) {
-            if (this.name.toLowerCase() === "metamask")
+            if (this.id === "metamask")
                 provider = provider.providers.find(
                     (provider: any) => provider.isMetaMask
                 );

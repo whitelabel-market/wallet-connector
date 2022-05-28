@@ -3,17 +3,17 @@ import { ProviderType, ConnectorOptions } from "../../types";
 import Logo from "./logo.svg";
 import { ExternalProvider } from "../../core/ExternalProvider";
 
-function onConnect(options: ConnectorOptions) {
+async function onConnect(options: ConnectorOptions) {
     const provider = new WalletConnectProvider({
         bridge: options.walletconnect?.bridge,
         qrcode: options.walletconnect?.qrcode,
         infuraId: options.infuraId,
-        rpc: options.rpcUri,
+        rpc: options.walletconnect?.rpc,
         chainId: options.chainId,
         qrcodeModalOptions: options.walletconnect?.qrcodeModalOptions,
     });
-
-    return provider.enable();
+    await provider.enable();
+    return provider
 }
 
 export default new ExternalProvider(

@@ -24,20 +24,21 @@ export type ConnectorUserOptions = {
     xsUri?: string;
     infuraId: string;
     infuraRpcUri?: string;
-    authereum: {
+    authereum?: {
         key: string;
         blockedPopupRedirect?: boolean;
         forceRedirect?: boolean;
         disableNotifications?: boolean;
         disableGoogleAnalytics?: boolean;
     };
-    fortmatic: {
+    fortmatic?: {
         key: string;
     };
     walletconnect?: {
         bridge?: string;
         qrcode?: boolean;
         qrcodeModalOptions?: object;
+        rpc?: Record<number, string>;
     };
     walletlink?: {
         darkMode?: boolean;
