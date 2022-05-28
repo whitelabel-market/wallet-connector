@@ -1,19 +1,26 @@
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { AbstractExternalProvider } from '../../core/ExternalProvider'
+import { ConnectResult, ProviderType } from '../../types'
 
-const onConnect = async () => {
-    let provider = null
-    if (typeof (window as any).BinanceChain !== 'undefined') {
-        provider = (window as any).BinanceChain
-        try {
-            await provider.request({ method: 'eth_requestAccounts' })
-        } catch (error) {
-            throw new Error('User Rejected')
-        }
-    } else {
-        throw new TypeError('No Binance Chain Wallet found')
+export class BinanceChainProvider extends AbstractExternalProvider {
+    constructor() {
+        super('Binance Chain', Logo, ProviderType.INJECTED)
     }
-    return provider
+
+    async _connect(): ConnectResult {
+        let provider = null
+        if (typeof (window as any).BinanceChain !== 'undefined') {
+            provider = (window as any).BinanceChain
+            try {
+                await provider.request({ method: 'eth_requestAccounts' })
+            } catch (error) {
+                throw new Error('User Rejected')
+            }
+        } else {
+            throw new TypeError('No Binance Chain Wallet found')
+        }
+        return provider
+    }
 }
 
-export default new ExternalProvider('Binance Chain', Logo, ProviderType.INJECTED, onConnect)
+export default () => new BinanceChainProvider()

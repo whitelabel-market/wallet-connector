@@ -1,10 +1,8 @@
-import { BaseProvider } from './BaseProvider'
+import { AbstractProviderBase } from './BaseProvider'
+import { ProviderType } from '../types'
 
-export class ExternalProvider extends BaseProvider {
-    protected onConnect!: ConnectFn
-
-    constructor(name: string, logo: string, type: ProviderType, onConnect: ConnectFn) {
-        super(name, logo, type)
-        this.onConnect = onConnect
+export abstract class AbstractExternalProvider<T = Record<string, unknown>> extends AbstractProviderBase<T> {
+    protected constructor(name: string, logo: string, type: ProviderType, options: T = {} as T) {
+        super(name, logo, type, options)
     }
 }

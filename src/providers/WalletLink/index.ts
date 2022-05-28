@@ -1,22 +1,24 @@
-import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
+import CoinbaseWalletSDK, { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { AbstractExternalProvider } from '../../core/ExternalProvider'
+import { ProviderType } from '../../types'
 
-async function onConnect(options: ConnectorOptions) {
-    const chainId = options.chainId
-    const appName = options.appName
-    const appLogoUrl = options.appLogoUrl
-    const darkMode = options.walletlink?.darkMode
-    const rpc = options.rpcUri === '' ? options.infuraRpcUri : options.rpcUri
-
-    const walletLink = new CoinbaseWalletSDK({
-        appName,
-        appLogoUrl,
-        darkMode,
-    })
-    const provider = walletLink.makeWeb3Provider(rpc, chainId)
-    await provider.send('eth_requestAccounts')
-    return provider
+export type WalletLinkOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
+    rpcUrl: string
+    chainId: number
 }
 
-export default new ExternalProvider('Coinbase Wallet', Logo, ProviderType.QRCODE, onConnect)
+export class WalletLinkProvider extends AbstractExternalProvider<WalletLinkOptions> {
+    constructor(options: WalletLinkOptions) {
+        super('Coinbase Wallet', Logo, ProviderType.QRCODE, options)
+    }
+
+    async _connect(): Promise<CoinbaseWalletProvider> {
+        const walletLink = new CoinbaseWalletSDK(super.options)
+        const provider = walletLink.makeWeb3Provider(super.options.rpcUrl, super.options.chainId)
+        await provider.send('eth_requestAccounts')
+        return provider
+    }
+}
+
+export default (options: WalletLinkOptions) => new WalletLinkProvider(options)

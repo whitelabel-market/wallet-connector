@@ -1,17 +1,17 @@
-import AuthereumProvider from './Authereum'
-import BinanceChainProvider from './BinanceChain'
-import FortmaticProvider from './Fortmatic'
-import FrameProvider from './Frame'
-import MetaMaskProvider from './MetaMask'
-import WalletConnectProvider from './WalletConnect'
-import WalletLinkProvider from './WalletLink'
+import Authereum from './Authereum'
+import BinanceChain from './BinanceChain'
+import Fortmatic from './Fortmatic'
+import Frame from './Frame'
+import MetaMask from './MetaMask'
+import WalletConnect from './WalletConnect'
+import WalletLink from './WalletLink'
 
 export default {
-    MetaMaskProvider,
-    WalletLinkProvider,
-    WalletConnectProvider,
-    BinanceChainProvider,
-    FortmaticProvider,
-    FrameProvider,
-    AuthereumProvider,
+    Authereum,
+    BinanceChain,
+    Fortmatic,
+    Frame,
+    MetaMask,
+    WalletConnect,
+    WalletLink,
 }

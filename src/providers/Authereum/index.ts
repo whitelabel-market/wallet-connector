@@ -1,22 +1,31 @@
 import { Authereum } from 'authereum/dist'
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { AbstractExternalProvider } from '../../core/ExternalProvider'
+import { ConnectResult, ProviderType } from '../../types'
 
-function onConnect(options: ConnectorOptions) {
-    const authereum = new Authereum({
-        apiKey: options.authereum.key,
-        networkName: options.networkName,
-        rpcUri: options.rpcUri,
-        webUri: options.webUri,
-        xsUri: options.webUri,
-        blockedPopupRedirect: options.authereum.blockedPopupRedirect,
-        forceRedirect: options.authereum.forceRedirect,
-        disableNotifications: options.authereum.disableNotifications,
-        disableGoogleAnalytics: options.authereum.disableGoogleAnalytics,
-    })
-    const provider = authereum.getProvider()
-    provider.authereum = authereum
-    return provider.enable()
+export type AuthereumOptions = {
+    apiKey: string
+    networkName?: string
+    rpcUri?: string
+    webUri?: string
+    xsUri?: string
+    blockedPopupRedirect?: boolean
+    forceRedirect?: boolean
+    disableNotifications?: boolean
+    disableGoogleAnalytics?: boolean
 }
 
-export default new ExternalProvider('Authereum', Logo, ProviderType.WEB, onConnect)
+export class AuthereumProvider extends AbstractExternalProvider<AuthereumOptions> {
+    constructor(options: AuthereumOptions) {
+        super('Authereum', Logo, ProviderType.WEB, options)
+    }
+
+    protected async _connect(): ConnectResult {
+        const authereum = new Authereum(super.options)
+        const provider = authereum.getProvider()
+        provider.authereum = authereum
+        return provider.enable()
+    }
+}
+
+export default (options: AuthereumOptions) => new AuthereumProvider(options)

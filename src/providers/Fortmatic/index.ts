@@ -1,20 +1,32 @@
 import Fortmatic from 'fortmatic'
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { AbstractExternalProvider } from '../../core/ExternalProvider'
+import { ConnectResult, ProviderType } from '../../types'
 
-async function onConnect(options: ConnectorOptions) {
-    const key = options.fortmatic.key
-    const network = options.networkName
-    const fm = new Fortmatic(key, network)
-    const provider = await fm.getProvider()
-    // provider.fm = fm;
-    await fm.user.login()
-    const isLoggedIn = await fm.user.isLoggedIn()
-    if (isLoggedIn) {
-        return provider
-    } else {
-        throw new Error('Failed to login to Fortmatic')
+export type FortmaticOptions = {
+    key: string
+    networkName?: string
+}
+
+export class FortmaticProvider extends AbstractExternalProvider<FortmaticOptions> {
+    constructor(options: FortmaticOptions) {
+        super('Fortmatic', Logo, ProviderType.WEB, options)
+    }
+
+    async _connect(): ConnectResult {
+        const key = super.options.key
+        const networkName = super.options.networkName
+        const fm = new Fortmatic(key, networkName)
+        const provider = await fm.getProvider()
+        // provider.fm = fm;
+        await fm.user.login()
+        const isLoggedIn = await fm.user.isLoggedIn()
+        if (isLoggedIn) {
+            return provider
+        } else {
+            throw new Error('Failed to login to Fortmatic')
+        }
     }
 }
 
-export default new ExternalProvider('Fortmatic', Logo, ProviderType.WEB, onConnect)
+export default (options: FortmaticOptions) => new FortmaticProvider(options)

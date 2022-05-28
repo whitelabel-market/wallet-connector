@@ -1,14 +1,15 @@
-import { BaseProvider } from './BaseProvider'
+import { AbstractProviderBase } from './BaseProvider'
+import { ProviderType } from '../types'
 
-export class InjectedProvider extends BaseProvider {
-    constructor(name: string, logo: string) {
-        super(name, logo, ProviderType.INJECTED)
+export abstract class AbstractInjectedProvider extends AbstractProviderBase<Record<string, unknown>> {
+    protected constructor(name: string, logo: string) {
+        super(name, logo, ProviderType.INJECTED, {})
     }
 
-    protected async onConnect() {
+    async _connect() {
         let provider = null
         if (typeof window.ethereum !== 'undefined') {
-            provider = (window as any).ethereum
+            provider = window.ethereum
             try {
                 await provider.request({ method: 'eth_requestAccounts' })
             } catch (error) {

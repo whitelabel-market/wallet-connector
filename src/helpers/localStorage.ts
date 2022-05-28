@@ -2,25 +2,25 @@ export default class LocalStorage {
     storage?: WindowLocalStorage['localStorage']
     enabled = false
 
-    constructor() {
+    constructor(public key: string) {
         if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
             this.storage = window.localStorage
             this.enabled = true
         }
     }
 
-    set(key: string, data: any) {
+    set(data: any) {
         const jsonData = JSON.stringify(data)
         if (this.enabled) {
-            this.storage?.setItem(key, jsonData)
+            this.storage?.setItem(this.key, jsonData)
         }
     }
 
-    get(key: string) {
+    get() {
         let data = null
         let raw = null
         if (this.enabled) {
-            raw = this.storage?.getItem(key)
+            raw = this.storage?.getItem(this.key)
         }
         if (raw && typeof raw === 'string') {
             try {
@@ -32,18 +32,18 @@ export default class LocalStorage {
         return data
     }
 
-    remove(key: string) {
+    remove() {
         if (this.enabled) {
-            this.storage?.removeItem(key)
+            this.storage?.removeItem(this.key)
         }
     }
 
-    update(key: string, data: any) {
-        const localData = this.get(key) || {}
+    update(data: any) {
+        const localData = this.get() || {}
         const mergedData = {
             ...localData,
             ...data,
         }
-        this.set(key, mergedData)
+        this.set(mergedData)
     }
 }

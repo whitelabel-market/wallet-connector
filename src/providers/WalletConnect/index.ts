@@ -1,18 +1,21 @@
-import WalletConnectProvider from '@walletconnect/web3-provider'
+import WalletConnectProviderDefault from '@walletconnect/web3-provider'
 import Logo from './logo.svg'
-import { ExternalProvider } from '../../core/ExternalProvider'
+import { AbstractExternalProvider } from '../../core/ExternalProvider'
+import { ProviderType } from '../../types'
+import { IWalletConnectProviderOptions } from '@walletconnect/types'
 
-function onConnect(options: ConnectorOptions) {
-    const provider = new WalletConnectProvider({
-        bridge: options.walletconnect?.bridge,
-        qrcode: options.walletconnect?.qrcode,
-        infuraId: options.infuraId,
-        rpc: options.rpcUri,
-        chainId: options.chainId,
-        qrcodeModalOptions: options.walletconnect?.qrcodeModalOptions,
-    })
+export type WalletConnectOptions = IWalletConnectProviderOptions
 
-    return provider.enable()
+export class WalletConnectProvider extends AbstractExternalProvider<WalletConnectOptions> {
+    constructor(options: WalletConnectOptions) {
+        super('WalletConnect', Logo, ProviderType.QRCODE, options)
+    }
+
+    async _connect(): Promise<WalletConnectProviderDefault> {
+        const provider = new WalletConnectProviderDefault(super.options)
+        await provider.enable()
+        return provider
+    }
 }
 
-export default new ExternalProvider('WalletConnect', Logo, ProviderType.QRCODE, onConnect)
+export default (options: WalletConnectOptions) => new WalletConnectProvider(options)

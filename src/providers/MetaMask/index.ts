@@ -1,4 +1,10 @@
 import Logo from './logo.svg'
-import { InjectedProvider } from '../../core/InjectedProvider'
+import { AbstractInjectedProvider } from '../../core/InjectedProvider'
 
-export default new InjectedProvider('MetaMask', Logo)
+export class MetaMaskProvider extends AbstractInjectedProvider {
+    constructor() {
+        super('MetaMask', Logo)
+    }
+}
+
+export default () => new MetaMaskProvider()
