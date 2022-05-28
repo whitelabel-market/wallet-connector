@@ -1,7 +1,7 @@
-import { CoinbaseWalletSDK, CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
+import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
 import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { ProviderType } from '../../types'
+import { Ethereumish, ProviderType } from '../../types'
 
 export type WalletLinkOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
     rpcUrl: string
@@ -13,11 +13,10 @@ export class WalletLinkProvider extends AbstractExternalProvider<WalletLinkOptio
         super('Coinbase Wallet', Logo, ProviderType.QRCODE, options)
     }
 
-    async _connect(): Promise<CoinbaseWalletProvider> {
+    async _connect() {
         const walletLink = new CoinbaseWalletSDK(super.options)
         const provider = walletLink.makeWeb3Provider(super.options.rpcUrl, super.options.chainId)
-        await provider.send('eth_requestAccounts')
-        return provider
+        return provider as unknown as Ethereumish
     }
 }
 

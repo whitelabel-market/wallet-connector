@@ -1,7 +1,7 @@
 import { Authereum } from 'authereum/dist'
 import Logo from './logo.svg'
 import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { ConnectResult, ProviderType } from '../../types'
+import { Ethereumish, ProviderType } from '../../types'
 
 export type AuthereumOptions = {
     apiKey: string
@@ -20,11 +20,12 @@ export class AuthereumProvider extends AbstractExternalProvider<AuthereumOptions
         super('Authereum', Logo, ProviderType.WEB, options)
     }
 
-    protected async _connect(): ConnectResult {
+    protected async _connect() {
         const authereum = new Authereum(super.options)
         const provider = authereum.getProvider()
         provider.authereum = authereum
-        return provider.enable()
+        await provider.enable()
+        return provider as unknown as Ethereumish
     }
 }
 

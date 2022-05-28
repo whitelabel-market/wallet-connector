@@ -1,6 +1,6 @@
 import generateId from '../helpers/generateId'
 import { ConnectResult, Ethereumish, IProvider, ProviderRpcError, ProviderState, ProviderType } from '../types'
-import { Connector } from './Connector'
+import { ConnectorFactory } from './ConnectorFactory'
 import { ensureChainIdAllowed, parseChainId, validateChainId } from '../helpers/chainId'
 
 export abstract class AbstractProviderBase<T> implements IProvider {
@@ -10,14 +10,12 @@ export abstract class AbstractProviderBase<T> implements IProvider {
     public type: ProviderType
     public provider!: Ethereumish | null
     public options!: T
-    public address!: string | null
+    public accounts!: string[] | null
     public state!: ProviderState | null
     public chainId!: number | null
     public error!: Error | null
 
-    public _initialized: boolean
-
-    private connector!: Connector
+    private wrapper!: ConnectorFactory
 
     protected constructor(name: string, logo: string, type: ProviderType, options: T) {
         this.id = generateId(name)
@@ -25,23 +23,18 @@ export abstract class AbstractProviderBase<T> implements IProvider {
         this.logo = logo
         this.type = type
         this.options = options
-        this._initialized = false
     }
 
-    _init(connector: Connector) {
-        this.connector = connector
-        this._initialized = true
+    _init(wrapper: ConnectorFactory) {
+        this.wrapper = wrapper
     }
 
     protected abstract _connect(): ConnectResult
 
     async connect(): ConnectResult {
-        if (!this._initialized) {
-            throw new Error('Provider not initialized')
-        }
         this.state = ProviderState.LOADING
-        this.provider = (await this._connect()) as Ethereumish
-        this.activate()
+        this.provider = await this._connect()
+        await this.activate()
         return this.provider
     }
 
@@ -49,21 +42,31 @@ export abstract class AbstractProviderBase<T> implements IProvider {
         this.deactivate()
     }
 
-    activate() {
-        this.address = 'address'
-        this.chainId = 1
-        this.error = null
-        this.connector.provider = this
+    async activate() {
+        try {
+            const getChainId = this.provider?.request({ method: 'eth_chainId' }) as Promise<string>
+            const getAccounts = this.provider
+                ?.request({ method: 'eth_requestAccounts' })
+                .catch(() => this.provider?.request({ method: 'eth_accounts' })) as Promise<string[]>
+
+            await Promise.all([getChainId, getAccounts]).then(([chainId, accounts]) => {
+                this.onChainChanged(chainId)
+                this.onAccountsChanged(accounts)
+            })
+        } catch (error: unknown) {
+            this.error = error as Error
+        }
+        this.wrapper.activeConnector = this
         this.state = this.error ? ProviderState.ERROR : ProviderState.CONNECTED
         this.addListener()
     }
 
     deactivate() {
-        this.address = null
+        this.accounts = null
         this.state = null
         this.chainId = null
         this.error = null
-        this.connector.provider = null
+        this.wrapper.activeConnector = null
     }
 
     addListener() {
@@ -80,15 +83,15 @@ export abstract class AbstractProviderBase<T> implements IProvider {
     onChainChanged(chainId: number | string) {
         const newChainId = parseChainId(chainId)
         this.reportError(validateChainId(newChainId))
-        const { allowedChainIds } = this.connector.options
-        if (allowedChainIds) {
+        const { allowedChainIds } = this.wrapper.options
+        if (allowedChainIds && allowedChainIds.length > 0) {
             this.reportError(ensureChainIdAllowed(newChainId, allowedChainIds))
         }
         this.chainId = newChainId
     }
 
     onAccountsChanged(accounts: string[]) {
-        this.address = Array.isArray(accounts) ? accounts[0] : ''
+        this.accounts = accounts
     }
 
     reportError(error?: Error) {

@@ -1,4 +1,4 @@
-import { Connector } from '../core/Connector'
+import { ConnectorFactory } from '../core/ConnectorFactory'
 
 export enum ProviderType {
     INJECTED,
@@ -93,7 +93,7 @@ export interface EthereumEvent {
 type EventKeys = keyof EthereumEvent
 type EventHandler<K extends EventKeys> = (event: EthereumEvent[K]) => void
 
-export interface Ethereumish {
+export interface EIP1193Provider {
     chainId: string
     isMetaMask?: boolean
     isStatus?: boolean
@@ -115,11 +115,10 @@ export interface Ethereumish {
     ) => void
 }
 
-export type ConnectResult = Promise<any>
+export type ConnectResult = Promise<Ethereumish>
 
 interface IProviderInitializable {
-    _initialized: boolean
-    _init: (connector: Connector) => void
+    _init: (connector: ConnectorFactory) => void
 }
 
 interface IProviderInfo extends IProviderInitializable {
@@ -136,8 +135,9 @@ export interface IProvider extends IProviderInfo {
 
 export type ConnectorOptions = {
     allowedChainIds?: number[]
-    cache: {
-        enabled: boolean
-        key: string
+    connectLazy?: boolean
+    cache?: {
+        enabled?: boolean
+        key?: string
     }
 }

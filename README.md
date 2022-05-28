@@ -35,9 +35,9 @@ yarn add @whitelabel-solutions/wallet-connector
 2. Install Provider packages
 
 ```js
-import Connector from "@whitelabel-solutions/wallet-connector";
+import ConnectorFactory from "@whitelabel-solutions/wallet-connector";
 
-const providers = Connector.init({
+const providers = ConnectorFactory.init({
     appName: "",
     infuraId: "",
     authereum: { key: "" },
@@ -59,9 +59,9 @@ const providers = Connector.init({
 </template>
 
 <script lang="ts" setup>
-import Connector from "@whitelabel-solutions/wallet-connector";
+import ConnectorFactory from "@whitelabel-solutions/wallet-connector";
 
-const providers = Connector.init({
+const providers = ConnectorFactory.init({
     appName: "",
     infuraId: "",
     authereum: { key: "" },

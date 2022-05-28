@@ -1,7 +1,7 @@
 import Fortmatic from 'fortmatic'
 import Logo from './logo.svg'
 import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { ConnectResult, ProviderType } from '../../types'
+import { ConnectResult, Ethereumish, ProviderType } from '../../types'
 
 export type FortmaticOptions = {
     key: string
@@ -22,7 +22,7 @@ export class FortmaticProvider extends AbstractExternalProvider<FortmaticOptions
         await fm.user.login()
         const isLoggedIn = await fm.user.isLoggedIn()
         if (isLoggedIn) {
-            return provider
+            return provider as unknown as Ethereumish
         } else {
             throw new Error('Failed to login to Fortmatic')
         }
