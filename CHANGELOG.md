@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.2...v1.0.3) (2022-05-29)
+
+
+### Bug Fixes
+
+* mobile metamask open app ([ef8ee52](https://github.com/whitelabel-market/wallet-connector/commit/ef8ee528563ea15be31504f4dded08ba52ce6432))
+
 ## [1.0.2](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.1...v1.0.2) (2022-05-29)
 
 
