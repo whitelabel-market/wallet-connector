@@ -1,3 +1,14 @@
+## [1.0.2](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.1...v1.0.2) (2022-05-29)
+
+
+### Bug Fixes
+
+* authereum and fortmatic option types ([656f820](https://github.com/whitelabel-market/wallet-connector/commit/656f8203e571005649aba60a8d02518e277b936c))
+* **connector.ts:** duplicated wrong type imports ([b6ce8be](https://github.com/whitelabel-market/wallet-connector/commit/b6ce8bedc47bd22e6d718c711e6014ec6714993e))
+* parse and validate chainid if not available ([24c0efa](https://github.com/whitelabel-market/wallet-connector/commit/24c0efaac0371044660cd72b01b10bb42f5a1ddd))
+* switch coinbase sdk to module import ([532a914](https://github.com/whitelabel-market/wallet-connector/commit/532a914b4036e145cbdbf3cec361913bbc7f7608))
+* walletconnect provide rpc options. Metamask open link if not exists ([4bfad83](https://github.com/whitelabel-market/wallet-connector/commit/4bfad8318b18bbb3e156028ae56f65412e81f727))
+
 ## [1.0.1](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.0...v1.0.1) (2022-05-12)
 
 

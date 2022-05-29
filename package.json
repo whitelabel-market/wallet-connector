@@ -16,7 +16,7 @@
         "type": "git",
         "url": "https://github.com/whitelabel-market/wallet-connector.git"
     },
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "./index.cjs",
     "module": "./index.mjs",
     "types": "./index.d.ts",
