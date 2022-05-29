@@ -21,7 +21,10 @@ export class InjectedProvider extends BaseProvider {
             provider = (window as any).celo;
         } else {
             if(this.id === "metamask"){
-                window.open("https://metamask.io/download/", "_blank")
+                const metaMaskDeeplink = "https://metamask.app.link/dapp/";
+                const { host, pathname } = window.location;
+                const url = `${metaMaskDeeplink}${host + pathname}`;
+                window.open(url, "_blank");
             }
 
             throw new Error("No Web3 Provider found");
