@@ -4,7 +4,7 @@ import Logo from "./logo.svg";
 import { ExternalProvider } from "../../core/ExternalProvider";
 
 async function onConnect(options: ConnectorOptions) {
-    const key = options.fortmatic.key;
+    const key = options.fortmatic?.key;
     const network = options.networkName;
     const fm = new Fortmatic(key, network);
     const provider = await fm.getProvider();
