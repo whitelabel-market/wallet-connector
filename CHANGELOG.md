@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.3...v1.0.4) (2022-05-30)
+
+
+### Bug Fixes
+
+* conflicting metamask and coinbase wallet in browser ([21df7d0](https://github.com/whitelabel-market/wallet-connector/commit/21df7d0a51ad9cb8a1cab6a7f77cbb8d09c7978a))
+
 ## [1.0.3](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.2...v1.0.3) (2022-05-29)
 
 
