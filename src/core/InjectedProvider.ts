@@ -10,6 +10,14 @@ export class InjectedProvider extends BaseProvider {
         let provider = null;
         if (typeof window.ethereum !== "undefined") {
             provider = (window as any).ethereum;
+            if (this.id === "metamask")
+                provider = provider.providers.find(
+                    (provider: any) => provider.isMetaMask
+                );
+            if (this.id === "coinbasewallet")
+                provider = provider.providers.find(
+                    (provider: any) => provider.isCoinbaseWallet
+                );
             try {
                 await provider.request({ method: "eth_requestAccounts" });
             } catch (error) {
@@ -20,7 +28,7 @@ export class InjectedProvider extends BaseProvider {
         } else if ((window as any)?.celo) {
             provider = (window as any).celo;
         } else {
-            if(this.id === "metamask"){
+            if (this.id === "metamask") {
                 const metaMaskDeeplink = "https://metamask.app.link/dapp/";
                 const { host, pathname } = window.location;
                 const url = `${metaMaskDeeplink}${host + pathname}`;
@@ -28,14 +36,6 @@ export class InjectedProvider extends BaseProvider {
             }
 
             throw new Error("No Web3 Provider found");
-        }
-
-
-        if (provider?.providers?.length) {
-            if (this.id === "metamask")
-                provider = provider.providers.find(
-                    (provider: any) => provider.isMetaMask
-                );
         }
 
         return provider;
