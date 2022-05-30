@@ -1,11 +1,33 @@
 name: Release Package
 
-on:
-    push:
-        branch:
-            - main
+on: workflow_dispatch
 
 jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            - name: Install yarn
+              run: npm install -g yarn
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  registry-url: https://registry.npmjs.org/
+                  cache: yarn
+
+            - run: yarn install --ignore-engines
+
+            - name: Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.PAT }}
+              run: yarn semantic-release
+
     publish-npm:
         runs-on: ubuntu-latest
         steps:
