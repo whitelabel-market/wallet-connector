@@ -7,32 +7,20 @@ export class InjectedProvider extends BaseProvider {
     }
 
     protected async onConnect() {
-        let provider = null;
-        let providerTemp = null;
-        if (typeof window.ethereum !== "undefined") {
-            provider = (window as any).ethereum;
-            if (this.id === "metamask") {
-                providerTemp = provider.providers.find(
-                    (provider: any) => provider.isMetaMask
-                );
-                if (providerTemp) provider = providerTemp;
-            }
-            if (this.id === "coinbasewallet") {
-                providerTemp = provider.providers.find(
-                    (provider: any) => provider.isCoinbaseWallet
-                );
-                if (providerTemp) provider = providerTemp;
-            }
-            try {
-                await provider.request({ method: "eth_requestAccounts" });
-            } catch (error) {
-                throw new Error("User Rejected");
-            }
-        } else if ((window as any)?.web3) {
-            provider = (window as any).web3.currentProvider;
-        } else if ((window as any)?.celo) {
-            provider = (window as any).celo;
+        const provider = await getProvider(this.id);
+
+        if (provider) {
+            await provider?.request({ method: "eth_requestAccounts" });
+            return provider;
         } else {
+            window.addEventListener(
+                "ethereum#initialized",
+                async () => await getProvider(this.id),
+                {
+                    once: true,
+                }
+            );
+
             if (this.id === "metamask") {
                 const metaMaskDeeplink = "https://metamask.app.link/dapp/";
                 const { host, pathname } = window.location;
@@ -40,9 +28,33 @@ export class InjectedProvider extends BaseProvider {
                 window.open(url, "_blank");
             }
 
-            throw new Error("No Web3 Provider found");
+            return;
         }
 
-        return provider;
+        function getProvider(id: string) {
+            const { ethereum, web3 }: any = window;
+
+            if (ethereum) {
+                if (ethereum?.providers?.length) {
+                    switch (id) {
+                        case "metamask":
+                            return ethereum.providers.find(
+                                (provider: any) => provider?.isMetaMask
+                            );
+                        case "coinbaseWallet":
+                            return ethereum.providers.find(
+                                (provider: any) => provider?.isCoinbaseWallet
+                            );
+                        default:
+                            break;
+                    }
+                }
+                return ethereum;
+            } else if (web3?.currentProvider) {
+                return web3.currentProvider;
+            }
+
+            return;
+        }
     }
 }
