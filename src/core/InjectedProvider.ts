@@ -8,16 +8,21 @@ export class InjectedProvider extends BaseProvider {
 
     protected async onConnect() {
         let provider = null;
+        let providerTemp = null;
         if (typeof window.ethereum !== "undefined") {
             provider = (window as any).ethereum;
-            if (this.id === "metamask")
-                provider = provider.providers.find(
+            if (this.id === "metamask") {
+                providerTemp = provider.providers.find(
                     (provider: any) => provider.isMetaMask
                 );
-            if (this.id === "coinbasewallet")
-                provider = provider.providers.find(
+                if (providerTemp) provider = providerTemp;
+            }
+            if (this.id === "coinbasewallet") {
+                providerTemp = provider.providers.find(
                     (provider: any) => provider.isCoinbaseWallet
                 );
+                if (providerTemp) provider = providerTemp;
+            }
             try {
                 await provider.request({ method: "eth_requestAccounts" });
             } catch (error) {
