@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.5...v1.0.6) (2022-06-02)
+
+
+### Bug Fixes
+
+* missing provider for mobile wallets ([77cf738](https://github.com/whitelabel-market/wallet-connector/commit/77cf73813f1a53bf9218c365d585978b451c98c7))
+
 ## [1.0.5](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.4...v1.0.5) (2022-06-02)
 
 
