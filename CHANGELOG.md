@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.4...v1.0.5) (2022-06-02)
+
+
+### Bug Fixes
+
+* wallet connection in metamask app ([d57cba4](https://github.com/whitelabel-market/wallet-connector/commit/d57cba40531ba3df4f4764fa6abfadfa12304325))
+
 ## [1.0.4](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.3...v1.0.4) (2022-05-30)
 
 
