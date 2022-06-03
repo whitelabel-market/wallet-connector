@@ -1,41 +1,41 @@
 <template>
-  <div class="provider-wrapper" v-if="connector">
-    <ProviderCard v-for="provider in connector.providers" :key="provider.id" :connector="connector"
-                  :provider="provider"/>
+  <div class="connection-wrapper" v-if="connection">
+    <ConnectorCard v-for="connector in connection.connectors" :key="connector.id" :connector="connector"/>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, ref} from 'vue';
-import ProviderCard from "@/components/ProviderCard.vue";
-import {Connector, Providers} from "@whitelabel-solutions/wallet-connector"
-
-const {MetaMask, WalletConnect, WalletLink} = Providers
+import {defineComponent, onMounted, ref} from 'vue';
+import ConnectorCard from "@/components/ConnectorCard.vue";
+import {Connection, Connectors} from "@whitelabel-solutions/wallet-connector"
 
 export default defineComponent({
   name: 'App',
-  components: {ProviderCard},
+  components: {ConnectorCard},
   setup() {
-    const connector = ref<any>(null)
+    const appName = "wallet-connector-example-vue"
+    const infuraId = "69b854375f754ababacab55f40fceca8"
+    const chainId = 4
+    const connection = ref<any>(null)
 
     onMounted(async () => {
       const options = {
-        allowedChainIds: [4],
+        allowedChainIds: [chainId],
         cache: {
           enabled: true
         }
       }
-      const providers = []
-      providers[0] = MetaMask()
-      providers[1] = WalletConnect({infuraId: "69b854375f754ababacab55f40fceca8"})
-      providers[2] = WalletLink({
-        appName: "APP_NAME",
-        rpcUrl: "https://mainnet.infura.io/v3/69b854375f754ababacab55f40fceca8",
-        chainId: 4
+      const connectors = []
+      connectors[0] = Connectors.MetaMask()
+      connectors[1] = Connectors.WalletConnect({infuraId})
+      connectors[2] = Connectors.WalletLink({
+        appName,
+        rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
+        chainId
       })
-      connector.value = await Connector.init(options, providers)
+      connection.value = await Connection.init(options, connectors)
     })
-    return {connector}
+    return {connection}
   }
 });
 </script>
@@ -48,7 +48,7 @@ export default defineComponent({
 </style>
 
 <style scoped>
-.provider-wrapper {
+.connection-wrapper {
   padding: 16px;
   display: flex;
   align-items: flex-start;

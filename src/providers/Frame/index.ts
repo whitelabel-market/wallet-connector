@@ -1,11 +1,11 @@
 import ethProvider from 'eth-provider'
 import FrameLogo from './logo.svg'
-import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
-import { createProvider } from '../../core/provider/construction'
+import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { createConnector } from '../../core/connector/construction'
 
-export class FrameProvider extends AbstractProvider {
+export class FrameConnector extends AbstractConnector {
     constructor() {
-        super('Frame', FrameLogo, ProviderType.WEB)
+        super('Frame', FrameLogo, ConnectorType.WEB)
     }
 
     async connectImpl() {
@@ -18,4 +18,4 @@ export class FrameProvider extends AbstractProvider {
     }
 }
 
-export default createProvider(new FrameProvider())
+export default createConnector(new FrameConnector())

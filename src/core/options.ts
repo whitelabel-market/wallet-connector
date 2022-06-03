@@ -1,4 +1,4 @@
-import { ConnectorOptions, ConnectorState, DeepRequired, ProviderStatus } from '../types'
+import { ConnectionOptions, ConnectorState, DeepRequired, ConnectorStatus } from '../types'
 import { mergeDeep } from '../helpers/mergeDeep'
 
 export const DEFAULT_STATE: ConnectorState = {
@@ -13,10 +13,10 @@ export const DEFAULT_STATE: ConnectorState = {
     accounts: undefined,
     chainId: undefined,
     error: undefined,
-    status: ProviderStatus.DISCONNECTED,
+    status: ConnectorStatus.DISCONNECTED,
 }
 
-export const getDefaultState = (options: Partial<ConnectorOptions>) => {
+export const getDefaultState = (options: Partial<ConnectionOptions>) => {
     return {
         ...DEFAULT_STATE,
         options: mergeDeep(DEFAULT_STATE.options, options),

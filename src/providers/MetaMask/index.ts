@@ -1,10 +1,10 @@
 import Logo from './logo.svg'
-import { AbstractProvider, ProviderType } from '../../types'
-import { createProvider } from '../../core/provider/construction'
+import { AbstractConnector, ConnectorType } from '../../types'
+import { createConnector } from '../../core/connector/construction'
 
-export class MetaMaskProvider extends AbstractProvider {
+export class MetaMaskConnector extends AbstractConnector {
     constructor() {
-        super('MetaMask', Logo, ProviderType.INJECTED)
+        super('MetaMask', Logo, ConnectorType.INJECTED)
     }
 
     async connectImpl() {
@@ -34,4 +34,4 @@ export class MetaMaskProvider extends AbstractProvider {
     }
 }
 
-export default createProvider(new MetaMaskProvider())
+export default createConnector(new MetaMaskConnector())

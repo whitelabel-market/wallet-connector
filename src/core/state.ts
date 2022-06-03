@@ -29,7 +29,7 @@ export class StateProxy {
     get status() {
         return this.state.status
     }
-    get address() {
-        return this.state?.accounts ? undefined : this.state.accounts[0]
+    get selectedAccount() {
+        return this.state?.accounts ? this.state.accounts[0] : undefined
     }
 }

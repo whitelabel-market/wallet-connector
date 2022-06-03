@@ -2,36 +2,36 @@ import {
     IExternalProvider,
     ProviderConnectInfo,
     ProviderRpcError,
-    ProviderStatus,
+    ConnectorStatus,
     ConnectorState,
     RequiredConnectorState,
 } from '../../types'
 import { ensureChainIdAllowed, parseChainId, validateChainId } from '../../helpers/chainId'
 import { StateProxy } from '../state'
-import { Connector } from '../connector'
+import { Connection } from '../connection'
 import LocalStorage from '../../helpers/localStorage'
 
 export class ExternalProviderProxy extends StateProxy {
     protected _provider!: IExternalProvider | undefined
-    protected _connector: Connector
+    protected _connection: Connection
     protected _storage: LocalStorage
 
     constructor({
-        connector,
+        connection,
         state,
         storage,
     }: {
-        connector: Connector
+        connection: Connection
         state: RequiredConnectorState
         storage: LocalStorage
     }) {
         super(state)
-        this._connector = connector
+        this._connection = connection
         this._storage = storage
     }
 
     protected _patchGlobalState(state: ConnectorState) {
-        this._connector.patchState(state)
+        this._connection.patchState(state)
         super.patchState(state)
     }
 
@@ -62,14 +62,14 @@ export class ExternalProviderProxy extends StateProxy {
         })
     }
 
-    protected disable(error?: Error, status?: ProviderStatus) {
+    protected disable(error?: Error, status?: ConnectorStatus) {
         this._provider?.removeAllListeners()
         this._provider = undefined
         this._patchGlobalState({
             accounts: undefined,
             chainId: undefined,
             error: error ?? undefined,
-            status: status ?? ProviderStatus.DISCONNECTED,
+            status: status ?? ConnectorStatus.DISCONNECTED,
             provider: undefined,
         })
     }
@@ -79,17 +79,17 @@ export class ExternalProviderProxy extends StateProxy {
     }
 
     private onDisconnect(error: ProviderRpcError | undefined) {
-        this.disable(error, ProviderStatus.ERROR)
+        this.disable(error, ConnectorStatus.ERROR)
     }
 
     private onChainChanged(newChainId: number | string) {
         const chainId = parseChainId(newChainId)
         let error = validateChainId(chainId) ?? undefined
-        const { allowedChainIds } = this._connector.options
+        const { allowedChainIds } = this._connection.options
         if (allowedChainIds && allowedChainIds.length > 0) {
             error = ensureChainIdAllowed(chainId, allowedChainIds) ?? undefined
         }
-        this._patchGlobalState(error ? { chainId, error, status: ProviderStatus.ERROR } : { chainId })
+        this._patchGlobalState(error ? { chainId, error, status: ConnectorStatus.ERROR } : { chainId })
     }
 
     private onAccountsChanged(accounts: string[]) {

@@ -2,28 +2,28 @@
   <table>
     <tr>
       <td>Id</td>
-      <td>{{ provider?.id }}</td>
+      <td>{{ connector?.id }}</td>
     </tr>
     <tr>
       <td>Status</td>
       <td>
         <div class="status-wrapper">
-          <span class="status" :style="{backgroundColor: wrapperColor[provider.status]}"></span>
-          <span>{{ provider.status }}</span>
+          <span class="status" :style="{backgroundColor: wrapperColor[connector.status]}"></span>
+          <span>{{ connector.status }}</span>
         </div>
       </td>
     </tr>
     <tr>
       <td>Selected Address</td>
-      <td>{{ provider?.selectedAddress ?? 'None' }}</td>
+      <td>{{ connector?.selectedAccount ?? 'None' }}</td>
     </tr>
     <tr>
       <td>Error</td>
-      <td>{{ provider.status === 'error' ? provider.error.message : 'None' }}</td>
+      <td>{{ connector.status === 'error' ? connector.error.message : 'None' }}</td>
     </tr>
     <tr>
       <td>Chain Id</td>
-      <td>{{ provider?.chainId ?? 'None' }}</td>
+      <td>{{ connector?.chainId ?? 'None' }}</td>
     </tr>
   </table>
 </template>
@@ -32,9 +32,9 @@
 import {computed, defineComponent} from 'vue';
 
 export default defineComponent({
-  name: 'ProviderCardTable',
+  name: 'ConnectorCardTable',
   props: {
-    provider: Object,
+    connector: Object,
   },
   setup() {
     const wrapperColor = {
@@ -53,6 +53,7 @@ table {
   font-size: 14px;
   line-height: 1.2em;
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
 }
 
@@ -60,6 +61,9 @@ td, th {
   border: 2px solid #f3f3f3;
   text-align: left;
   padding: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 td:first-child {
@@ -68,6 +72,7 @@ td:first-child {
 }
 
 td:last-child {
+  width: 50%;
 }
 
 .status-wrapper {

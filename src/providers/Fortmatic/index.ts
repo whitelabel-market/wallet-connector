@@ -1,17 +1,17 @@
 import Fortmatic from 'fortmatic'
 import Logo from './logo.svg'
-import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
-import { createProvider } from '../../core/provider/construction'
-import { BinanceChainProvider } from '../BinanceChain'
+import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { createConnector } from '../../core/connector/construction'
+import { BinanceChainConnector } from '../BinanceChain'
 
 export type FortmaticOptions = {
     key: string
     networkName?: string
 }
 
-export class FortmaticProvider extends AbstractProvider<FortmaticOptions> {
+export class FortmaticConnector extends AbstractConnector<FortmaticOptions> {
     constructor() {
-        super('Fortmatic', Logo, ProviderType.WEB)
+        super('Fortmatic', Logo, ConnectorType.WEB)
     }
 
     async connectImpl() {
@@ -33,4 +33,4 @@ export class FortmaticProvider extends AbstractProvider<FortmaticOptions> {
     }
 }
 
-export default createProvider(new BinanceChainProvider())
+export default createConnector(new BinanceChainConnector())

@@ -1,14 +1,14 @@
 import Logo from './logo.svg'
-import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
-import { createProvider } from '../../core/provider/construction'
+import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { createConnector } from '../../core/connector/construction'
 
-export class BinanceChainProvider extends AbstractProvider {
+export class BinanceChainConnector extends AbstractConnector {
     constructor() {
-        super('Binance Chain', Logo, ProviderType.INJECTED)
+        super('Binance Chain', Logo, ConnectorType.INJECTED)
     }
 
     async connectImpl() {
-        // ToDo: Conform to existing Injected Provider implementation
+        // ToDo: Conform to existing Injected Connector implementation
         let provider = null
         if (typeof (window as any).BinanceChain !== 'undefined') {
             provider = (window as any).BinanceChain
@@ -24,4 +24,4 @@ export class BinanceChainProvider extends AbstractProvider {
     }
 }
 
-export default createProvider(new BinanceChainProvider())
+export default createConnector(new BinanceChainConnector())

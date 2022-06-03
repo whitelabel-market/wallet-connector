@@ -1,8 +1,8 @@
 import Core from './core'
-import Providers from './providers'
-import type { IProvider, ConnectorOptions, ProviderType, ConnectResult } from './types'
+import Connectors from './providers'
+import type { IConnector, ConnectionOptions, ConnectorType, ConnectResult } from './types'
 
-const { Connector } = Core
+const { Connection } = Core
 
-export type { IProvider, ProviderType, ConnectorOptions, ConnectResult }
-export { Connector, Providers }
+export type { IConnector, ConnectorType, ConnectionOptions, ConnectResult }
+export { Connection, Connectors }

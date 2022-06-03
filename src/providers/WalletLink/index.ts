@@ -1,18 +1,18 @@
 import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
-import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
-import { createProvider } from '../../core/provider/construction'
+import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { createConnector } from '../../core/connector/construction'
 
 export type WalletLinkOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
     rpcUrl: string
     chainId: number
 }
 
-export class WalletLinkProvider extends AbstractProvider<WalletLinkOptions> {
+export class WalletLinkConnector extends AbstractConnector<WalletLinkOptions> {
     coinbaseWallet!: CoinbaseWalletSDK
 
     constructor() {
-        super('Coinbase Wallet', Logo, ProviderType.QRCODE)
+        super('Coinbase Wallet', Logo, ConnectorType.QRCODE)
     }
 
     async connectImpl() {
@@ -26,4 +26,4 @@ export class WalletLinkProvider extends AbstractProvider<WalletLinkOptions> {
     }
 }
 
-export default createProvider(new WalletLinkProvider())
+export default createConnector(new WalletLinkConnector())

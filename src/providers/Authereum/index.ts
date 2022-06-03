@@ -1,7 +1,7 @@
 import { Authereum } from 'authereum/dist'
 import Logo from './logo.svg'
-import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
-import { createProvider } from '../../core/provider/construction'
+import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { createConnector } from '../../core/connector/construction'
 
 export type AuthereumOptions = {
     apiKey: string
@@ -15,9 +15,9 @@ export type AuthereumOptions = {
     disableGoogleAnalytics?: boolean
 }
 
-class AuthereumProvider extends AbstractProvider<AuthereumOptions> {
+class AuthereumConnector extends AbstractConnector<AuthereumOptions> {
     constructor() {
-        super('Authereum', Logo, ProviderType.WEB)
+        super('Authereum', Logo, ConnectorType.WEB)
     }
 
     async connectImpl() {
@@ -34,4 +34,4 @@ class AuthereumProvider extends AbstractProvider<AuthereumOptions> {
     }
 }
 
-export default createProvider<AuthereumOptions>(new AuthereumProvider())
+export default createConnector<AuthereumOptions>(new AuthereumConnector())
