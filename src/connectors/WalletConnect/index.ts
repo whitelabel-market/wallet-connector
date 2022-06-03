@@ -1,6 +1,6 @@
 import WalletConnectProviderDefault from '@walletconnect/web3-provider'
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { AbstractConnector, IExternalProvider } from '../../types'
 import { IWalletConnectProviderOptions } from '@walletconnect/types'
 import { createConnector } from '../../core/construction'
 
@@ -10,7 +10,7 @@ export class WalletConnectConnector extends AbstractConnector<WalletConnectOptio
     walletConnect!: WalletConnectProviderDefault
 
     constructor() {
-        super('WalletConnect', Logo, ConnectorType.QRCODE)
+        super('WalletConnect', Logo)
     }
 
     async connectImpl() {

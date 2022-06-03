@@ -1,6 +1,6 @@
 import { Authereum } from 'authereum/dist'
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { AbstractConnector, IExternalProvider } from '../../types'
 import { createConnector } from '../../core/construction'
 
 export type AuthereumOptions = {
@@ -17,7 +17,7 @@ export type AuthereumOptions = {
 
 class AuthereumConnector extends AbstractConnector<AuthereumOptions> {
     constructor() {
-        super('Authereum', Logo, ConnectorType.WEB)
+        super('Authereum', Logo)
     }
 
     async connectImpl() {

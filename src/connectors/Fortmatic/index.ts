@@ -1,6 +1,6 @@
 import Fortmatic from 'fortmatic'
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
+import { AbstractConnector, IExternalProvider } from '../../types'
 import { createConnector } from '../../core/construction'
 import { BinanceChainConnector } from '../BinanceChain'
 
@@ -11,7 +11,7 @@ export type FortmaticOptions = {
 
 export class FortmaticConnector extends AbstractConnector<FortmaticOptions> {
     constructor() {
-        super('Fortmatic', Logo, ConnectorType.WEB)
+        super('Fortmatic', Logo)
     }
 
     async connectImpl() {

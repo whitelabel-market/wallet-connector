@@ -1,4 +1,4 @@
-import { AbstractConnector, ConnectionOptions, ConnectionParams, DeepRequired } from '../types'
+import { AbstractConnector, ConnectionOptions, DeepRequired, IConnectionParams } from '../types'
 import { Connection } from './connection'
 import { mergeDeep } from '../helpers/mergeDeep'
 
@@ -14,7 +14,7 @@ export function initOptions(options: ConnectionOptions) {
     return mergeDeep(DEFAULT_OPTIONS, options) as DeepRequired<ConnectionOptions>
 }
 
-export function initConnection({ options, connectors }: ConnectionParams) {
+export function initConnection({ options, connectors }: IConnectionParams) {
     return Connection.init(options, connectors)
 }
 

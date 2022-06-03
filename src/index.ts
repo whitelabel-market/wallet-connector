@@ -1,8 +1,19 @@
 import initConnection from './core'
-import Connectors from './providers'
-import type { IConnector, ConnectionOptions, ConnectorType, ConnectorStatus, ConnectResult } from './types'
+import Connectors from './connectors'
+import { ConnectorStatus, type IConnector, type ConnectionOptions, type ConnectResult } from './types'
 
 const { Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, WalletLink } = Connectors
 
-export type { IConnector, ConnectorType, ConnectorStatus, ConnectionOptions, ConnectResult }
-export { initConnection, Connectors, Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, WalletLink }
+export type { IConnector, ConnectionOptions, ConnectResult }
+export {
+    initConnection,
+    Connectors,
+    ConnectorStatus,
+    Authereum,
+    BinanceChain,
+    Fortmatic,
+    Frame,
+    MetaMask,
+    WalletConnect,
+    WalletLink,
+}

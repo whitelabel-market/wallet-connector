@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import {computed, defineComponent} from 'vue';
+import {ConnectorStatus} from "@whitelabel-solutions/wallet-connector";
 
 export default defineComponent({
   name: 'ConnectionCardTable',
@@ -39,7 +40,7 @@ export default defineComponent({
     connection: Object,
   },
   setup({connection}) {
-    const connectionStatus = computed(() => connection?.activeConnector?.status ?? 'disconnected')
+    const connectionStatus = computed(() => connection?.activeConnector?.status ?? ConnectorStatus.DISCONNECTED)
     const wrapperColor = {
       disconnected: "#e5e5e5",
       loading: "#f0ad4e",

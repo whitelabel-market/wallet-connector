@@ -1,10 +1,10 @@
 import Logo from './logo.svg'
-import { AbstractConnector, ConnectorType } from '../../types'
+import { AbstractConnector } from '../../types'
 import { createConnector } from '../../core/construction'
 
 export class MetaMaskConnector extends AbstractConnector {
     constructor() {
-        super('MetaMask', Logo, ConnectorType.INJECTED)
+        super('MetaMask', Logo)
     }
 
     async connectImpl() {

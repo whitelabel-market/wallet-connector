@@ -2,12 +2,6 @@ import generateId from '../helpers/generateId'
 
 export type DeepRequired<T> = { [K in keyof T]: DeepRequired<T[K]> } & Required<T>
 
-export enum ConnectorType {
-    INJECTED,
-    QRCODE,
-    WEB,
-}
-
 export enum ConnectorStatus {
     LOADING = 'loading',
     ERROR = 'error',
@@ -114,18 +108,7 @@ export type ConnectionOptions = {
     }
 }
 
-export type ConnectorState = {
-    options?: DeepRequired<ConnectionOptions>
-    provider?: IConnectorWrapper | undefined
-    accounts?: string[] | undefined
-    chainId?: number | undefined
-    error?: Error | undefined
-    status?: ConnectorStatus
-}
-
-export type RequiredConnectorState = DeepRequired<ConnectorState>
-
-export interface ConnectionParams {
+export interface IConnectionParams {
     options: ConnectionOptions
     connectors: IConnector[]
 }
@@ -137,8 +120,6 @@ export interface IConnectorInfo {
 }
 
 export interface IConnector extends IConnectorInfo {
-    type: ConnectorType
-
     connectImpl(): ConnectResult
     disconnectImpl(): void
 }
@@ -159,7 +140,7 @@ export abstract class AbstractConnector<T = void> implements IConnector {
     id: string
     options!: T
 
-    protected constructor(public name: string, public logo: string, public type: ConnectorType) {
+    protected constructor(public name: string, public logo: string) {
         this.id = generateId(this.name)
     }
 
