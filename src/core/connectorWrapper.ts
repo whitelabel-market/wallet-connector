@@ -72,7 +72,7 @@ export class ConnectorWrapper implements IConnectorWrapper {
         this.chainId = undefined
         this.provider = undefined
         const i = this.connection.activeConnectors.findIndex((c) => c.id === this.id)
-        this.connection.activeConnectors.splice(i, 1)
+        if (i > -1) this.connection.activeConnectors.splice(i, 1)
         if (error) {
             this.onError(error)
         } else {
@@ -84,15 +84,17 @@ export class ConnectorWrapper implements IConnectorWrapper {
     async connect() {
         try {
             this.status = ConnectorStatus.LOADING
+            this.connection.activeConnectors.unshift(this)
             this.provider = await this.impl.connectImpl()
             await this.enable()
-            this.connection.activeConnectors.unshift(this)
             this.status = ConnectorStatus.CONNECTED
 
             if (this.connection.options.cache.enabled) {
                 this.connection.storage.set(this.id)
             }
         } catch (error: any) {
+            const i = this.connection.activeConnectors.findIndex((c) => c.id === this.id)
+            if (i > -1) this.connection.activeConnectors.splice(i, 1)
             this.provider = undefined
             this.onError(error)
         }
