@@ -1,16 +1,21 @@
 import ethProvider from 'eth-provider'
 import FrameLogo from './logo.svg'
-import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { ConnectResult, ProviderType } from '../../types'
+import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
+import { createProvider } from '../../core/provider/construction'
 
-export class FrameProvider extends AbstractExternalProvider {
+export class FrameProvider extends AbstractProvider {
     constructor() {
         super('Frame', FrameLogo, ProviderType.WEB)
     }
 
-    async _connect(): ConnectResult {
-        return ethProvider('frame')
+    async connectImpl() {
+        return ethProvider('frame') as unknown as IExternalProvider
+    }
+
+    async disconnectImpl() {
+        // ToDo
+        return null
     }
 }
 
-export default () => new FrameProvider()
+export default createProvider(new FrameProvider())

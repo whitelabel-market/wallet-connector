@@ -1,23 +1,29 @@
 import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
-import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { Ethereumish, ProviderType } from '../../types'
+import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
+import { createProvider } from '../../core/provider/construction'
 
 export type WalletLinkOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
     rpcUrl: string
     chainId: number
 }
 
-export class WalletLinkProvider extends AbstractExternalProvider<WalletLinkOptions> {
-    constructor(options: WalletLinkOptions) {
-        super('Coinbase Wallet', Logo, ProviderType.QRCODE, options)
+export class WalletLinkProvider extends AbstractProvider<WalletLinkOptions> {
+    coinbaseWallet!: CoinbaseWalletSDK
+
+    constructor() {
+        super('Coinbase Wallet', Logo, ProviderType.QRCODE)
     }
 
-    async _connect() {
-        const walletLink = new CoinbaseWalletSDK(super.options)
-        const provider = walletLink.makeWeb3Provider(super.options.rpcUrl, super.options.chainId)
-        return provider as unknown as Ethereumish
+    async connectImpl() {
+        this.coinbaseWallet = new CoinbaseWalletSDK(this.options)
+        const provider = await this.coinbaseWallet.makeWeb3Provider(this.options.rpcUrl)
+        return provider as unknown as IExternalProvider
+    }
+
+    async disconnectImpl() {
+        return this.coinbaseWallet.disconnect()
     }
 }
 
-export default (options: WalletLinkOptions) => new WalletLinkProvider(options)
+export default createProvider(new WalletLinkProvider())

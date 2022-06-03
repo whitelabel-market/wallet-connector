@@ -1,4 +1,6 @@
-import { ConnectorFactory } from '../core/ConnectorFactory'
+import generateId from '../helpers/generateId'
+
+export type DeepRequired<T> = { [K in keyof T]: DeepRequired<T[K]> } & Required<T>
 
 export enum ProviderType {
     INJECTED,
@@ -6,24 +8,11 @@ export enum ProviderType {
     WEB,
 }
 
-export enum ProviderState {
+export enum ProviderStatus {
     LOADING = 'loading',
     ERROR = 'error',
     CONNECTED = 'connected',
-}
-
-export enum RpcMethods {
-    // EIP-747
-    WATCH_ASSET = 'wallet_watchAsset',
-    // EIP-758
-    SUBSCRIBE = 'eth_subscribe',
-    UNSUBSCRIBE = 'eth_unsubscribe',
-    // EIP-1193
-    REQUEST_ACCOUNTS = 'eth_requestAccounts',
-    // EIP-3085
-    ADD_CHAIN = 'wallet_addEthereumChain',
-    // EIP-3326
-    SWITCH_CHAIN = 'wallet_switchEthereumChain',
+    DISCONNECTED = 'disconnected',
 }
 
 // per EIP-1193
@@ -93,7 +82,7 @@ export interface EthereumEvent {
 type EventKeys = keyof EthereumEvent
 type EventHandler<K extends EventKeys> = (event: EthereumEvent[K]) => void
 
-export interface EIP1193Provider {
+export interface IExternalProvider {
     chainId: string
     isMetaMask?: boolean
     isStatus?: boolean
@@ -115,29 +104,64 @@ export interface EIP1193Provider {
     ) => void
 }
 
-export type ConnectResult = Promise<Ethereumish>
-
-interface IProviderInitializable {
-    _init: (connector: ConnectorFactory) => void
-}
-
-interface IProviderInfo extends IProviderInitializable {
-    id: string
-    name: string
-    logo: string
-    type: ProviderType
-}
-
-export interface IProvider extends IProviderInfo {
-    connect: () => ConnectResult
-    disconnect: () => void
-}
+export type ConnectResult = Promise<IExternalProvider>
 
 export type ConnectorOptions = {
-    allowedChainIds?: number[]
-    connectLazy?: boolean
+    allowedChainIds?: number[] | null
     cache?: {
         enabled?: boolean
         key?: string
     }
+}
+
+export type ConnectorState = {
+    options?: DeepRequired<ConnectorOptions>
+    provider?: IProviderWrapper | undefined
+    accounts?: string[] | undefined
+    chainId?: number | undefined
+    error?: Error | undefined
+    status?: ProviderStatus
+}
+
+export type RequiredConnectorState = DeepRequired<ConnectorState>
+
+export interface IProviderInfo {
+    id: string
+    name: string
+    logo: string
+}
+
+export interface IProvider extends IProviderInfo {
+    type: ProviderType
+
+    connectImpl(): ConnectResult
+    disconnectImpl(): void
+}
+
+export interface IProviderWrapper extends IProviderInfo {
+    options: ConnectorOptions
+    accounts: string[] | undefined
+    chainId: number | undefined
+    error: Error | undefined
+
+    connect: () => Promise<IProvider>
+    disconnect: () => void
+}
+
+export abstract class AbstractProvider<T = void> implements IProvider {
+    id: string
+    options!: T
+
+    protected constructor(public name: string, public logo: string, public type: ProviderType) {
+        this.id = generateId(this.name)
+    }
+
+    init(options: T): IProvider {
+        this.options = options
+        console.log('init options', options)
+        return this
+    }
+
+    abstract connectImpl(): ConnectResult
+    abstract disconnectImpl(): void
 }

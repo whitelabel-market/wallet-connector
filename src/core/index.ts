@@ -1,5 +1,5 @@
-import { ConnectorFactory } from './ConnectorFactory'
+import { Connector } from './connector'
 
 export default {
-    Connector: ConnectorFactory,
+    Connector: Connector,
 }

@@ -1,21 +1,27 @@
 import WalletConnectProviderDefault from '@walletconnect/web3-provider'
 import Logo from './logo.svg'
-import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { Ethereumish, ProviderType } from '../../types'
+import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
 import { IWalletConnectProviderOptions } from '@walletconnect/types'
+import { createProvider } from '../../core/provider/construction'
 
 export type WalletConnectOptions = IWalletConnectProviderOptions
 
-export class WalletConnectProvider extends AbstractExternalProvider<WalletConnectOptions> {
-    constructor(options: WalletConnectOptions) {
-        super('WalletConnect', Logo, ProviderType.QRCODE, options)
+export class WalletConnectProvider extends AbstractProvider<WalletConnectOptions> {
+    walletConnect!: WalletConnectProviderDefault
+
+    constructor() {
+        super('WalletConnect', Logo, ProviderType.QRCODE)
     }
 
-    async _connect() {
-        const provider = new WalletConnectProviderDefault(super.options)
-        await provider.enable()
-        return provider as unknown as Ethereumish
+    async connectImpl() {
+        this.walletConnect = new WalletConnectProviderDefault(this.options)
+        await this.walletConnect.enable()
+        return this.walletConnect as unknown as IExternalProvider
+    }
+
+    disconnectImpl() {
+        return this.walletConnect.disconnect()
     }
 }
 
-export default (options: WalletConnectOptions) => new WalletConnectProvider(options)
+export default createProvider(new WalletConnectProvider())

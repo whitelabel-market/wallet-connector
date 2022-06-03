@@ -1,7 +1,7 @@
 import { Authereum } from 'authereum/dist'
 import Logo from './logo.svg'
-import { AbstractExternalProvider } from '../../core/ExternalProvider'
-import { Ethereumish, ProviderType } from '../../types'
+import { AbstractProvider, IExternalProvider, ProviderType } from '../../types'
+import { createProvider } from '../../core/provider/construction'
 
 export type AuthereumOptions = {
     apiKey: string
@@ -15,18 +15,23 @@ export type AuthereumOptions = {
     disableGoogleAnalytics?: boolean
 }
 
-export class AuthereumProvider extends AbstractExternalProvider<AuthereumOptions> {
-    constructor(options: AuthereumOptions) {
-        super('Authereum', Logo, ProviderType.WEB, options)
+class AuthereumProvider extends AbstractProvider<AuthereumOptions> {
+    constructor() {
+        super('Authereum', Logo, ProviderType.WEB)
     }
 
-    protected async _connect() {
-        const authereum = new Authereum(super.options)
+    async connectImpl() {
+        const authereum = new Authereum(this.options)
         const provider = authereum.getProvider()
         provider.authereum = authereum
         await provider.enable()
-        return provider as unknown as Ethereumish
+        return provider as unknown as IExternalProvider
+    }
+
+    async disconnectImpl() {
+        // ToDo
+        return null
     }
 }
 
-export default (options: AuthereumOptions) => new AuthereumProvider(options)
+export default createProvider<AuthereumOptions>(new AuthereumProvider())
