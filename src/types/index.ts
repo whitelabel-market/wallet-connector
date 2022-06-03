@@ -125,6 +125,11 @@ export type ConnectorState = {
 
 export type RequiredConnectorState = DeepRequired<ConnectorState>
 
+export interface ConnectionParams {
+    options: ConnectionOptions
+    connectors: IConnector[]
+}
+
 export interface IConnectorInfo {
     id: string
     name: string
@@ -139,12 +144,14 @@ export interface IConnector extends IConnectorInfo {
 }
 
 export interface IConnectorWrapper extends IConnectorInfo {
-    options: ConnectionOptions
+    provider: IExternalProvider | undefined
     accounts: string[] | undefined
     chainId: number | undefined
     error: Error | undefined
+    status: ConnectorStatus | undefined
+    selectedAccount: string | undefined
 
-    connect: () => Promise<IConnector>
+    connect: () => Promise<IConnectorWrapper>
     disconnect: () => void
 }
 

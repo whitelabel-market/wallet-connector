@@ -1,37 +1,43 @@
-import { ConnectionOptions, IConnector, IConnectorWrapper, RequiredConnectorState } from '../types'
+import { ConnectionOptions, DeepRequired, IConnector, IConnectorWrapper } from '../types'
 import LocalStorage from '../helpers/localStorage'
-import { createConnectorWrapper } from './connector/construction'
-import { StateProxy } from './state'
-import { getDefaultState } from './options'
+import { initOptions } from './construction'
+import { ConnectorWrapper } from './connectorWrapper'
 
-export class Connection extends StateProxy {
-    public connectors!: IConnectorWrapper[]
-    private storage: LocalStorage
+export interface IConnection {
+    options: DeepRequired<ConnectionOptions>
+    connectors: IConnectorWrapper[]
+    activeConnectors: IConnectorWrapper[]
+    activeConnector: IConnectorWrapper | undefined
+}
 
-    constructor(initialState: RequiredConnectorState, storage: LocalStorage) {
-        super(initialState)
-        this.storage = storage
+export class Connection implements IConnection {
+    options: DeepRequired<ConnectionOptions>
+    connectors: IConnectorWrapper[]
+    activeConnectors: IConnectorWrapper[]
+    storage: LocalStorage
+
+    constructor(options: ConnectionOptions, connectors: IConnector[]) {
+        this.options = initOptions(options)
+        this.storage = new LocalStorage(this.options.cache.key)
+        this.activeConnectors = []
+        this.connectors = connectors.map((impl) => new ConnectorWrapper(impl, this))
     }
 
     static async init(options: ConnectionOptions, connectors: IConnector[]): Promise<Connection> {
-        const state = getDefaultState(options)
-        const storage = new LocalStorage(state.options.cache.key)
-        const connection = new Connection(state, storage)
-        connection.connectors = connectors.map((impl) => createConnectorWrapper(impl, { connection, state, storage }))
-        if (state.options.cache?.enabled) {
-            await connection.loadCachedConnector()
+        const connection = new Connection(options, connectors)
+        if (connection.options.cache?.enabled) {
+            const id = connection.storage.get()
+            if (id) {
+                const connectorById = connection.connectors.find((c) => c.id === id)
+                if (connectorById) {
+                    await connectorById.connect()
+                }
+            }
         }
         return connection
     }
 
-    async loadCachedConnector() {
-        const connectorId = this.storage.get()
-        if (connectorId) {
-            const connectorById = this.connectors.find((c) => c.id === connectorId)
-            if (connectorById) {
-                await connectorById.connect()
-            }
-        }
-        return null
+    get activeConnector() {
+        return this.activeConnectors.length > 0 ? this.activeConnectors[0] : undefined
     }
 }

@@ -1,7 +1,7 @@
 import ethProvider from 'eth-provider'
 import FrameLogo from './logo.svg'
 import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
-import { createConnector } from '../../core/connector/construction'
+import { createConnector } from '../../core/construction'
 
 export class FrameConnector extends AbstractConnector {
     constructor() {

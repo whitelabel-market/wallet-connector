@@ -1,5 +1,3 @@
-import { Connection } from './connection'
+import { initConnection } from './construction'
 
-export default {
-    Connection: Connection,
-}
+export default initConnection

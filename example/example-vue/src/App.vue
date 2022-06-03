@@ -7,7 +7,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import ConnectorCard from "@/components/ConnectorCard.vue";
-import {Connection, Connectors} from "@whitelabel-solutions/wallet-connector"
+import {initConnection, MetaMask,WalletConnect,WalletLink } from "@whitelabel-solutions/wallet-connector"
 
 export default defineComponent({
   name: 'App',
@@ -25,15 +25,16 @@ export default defineComponent({
           enabled: true
         }
       }
-      const connectors = []
-      connectors[0] = Connectors.MetaMask()
-      connectors[1] = Connectors.WalletConnect({infuraId})
-      connectors[2] = Connectors.WalletLink({
-        appName,
-        rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
-        chainId
-      })
-      connection.value = await Connection.init(options, connectors)
+      const connectors = [
+        MetaMask(),
+        WalletConnect({infuraId}),
+        WalletLink({
+          appName,
+          rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
+          chainId
+        })
+      ]
+      connection.value = await initConnection({options, connectors})
     })
     return {connection}
   }

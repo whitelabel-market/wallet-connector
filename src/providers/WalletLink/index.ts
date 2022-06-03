@@ -1,7 +1,7 @@
 import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
-import { createConnector } from '../../core/connector/construction'
+import { createConnector } from '../../core/construction'
 
 export type WalletLinkOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
     rpcUrl: string

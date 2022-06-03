@@ -1,8 +1,8 @@
-import Core from './core'
+import initConnection from './core'
 import Connectors from './providers'
-import type { IConnector, ConnectionOptions, ConnectorType, ConnectResult } from './types'
+import type { IConnector, ConnectionOptions, ConnectorType, ConnectorStatus, ConnectResult } from './types'
 
-const { Connection } = Core
+const { Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, WalletLink } = Connectors
 
-export type { IConnector, ConnectorType, ConnectionOptions, ConnectResult }
-export { Connection, Connectors }
+export type { IConnector, ConnectorType, ConnectorStatus, ConnectionOptions, ConnectResult }
+export { initConnection, Connectors, Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, WalletLink }

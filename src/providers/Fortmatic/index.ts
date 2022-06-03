@@ -1,7 +1,7 @@
 import Fortmatic from 'fortmatic'
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider, ConnectorType } from '../../types'
-import { createConnector } from '../../core/connector/construction'
+import { createConnector } from '../../core/construction'
 import { BinanceChainConnector } from '../BinanceChain'
 
 export type FortmaticOptions = {
