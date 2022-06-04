@@ -1,4 +1,5 @@
 import generateId from '../helpers/generateId'
+import LocalStorage from '../helpers/localStorage'
 
 export type DeepRequired<T> = { [K in keyof T]: DeepRequired<T[K]> } & Required<T>
 
@@ -108,6 +109,8 @@ export type ConnectionOptions = {
     }
 }
 
+export type RequiredConnectionOptions = DeepRequired<ConnectionOptions>
+
 export interface IConnectionParams {
     options: ConnectionOptions
     connectors: IConnector[]
@@ -134,6 +137,21 @@ export interface IConnectorWrapper extends IConnectorInfo {
 
     connect: () => Promise<IConnectorWrapper>
     disconnect: () => void
+}
+
+export interface IConnectorFactory {
+    connectors: IConnectorWrapper[]
+    activeConnectors: IConnectorWrapper[]
+    activeConnector: IConnectorWrapper | undefined
+
+    add(wrapper: IConnectorWrapper): void
+    remove(wrapper: IConnectorWrapper): void
+    init(connectors: IConnector[], wrapper: IConnection): void
+}
+
+export interface IConnection extends IConnectorFactory {
+    options: RequiredConnectionOptions
+    storage: LocalStorage
 }
 
 export abstract class AbstractConnector<T = void> implements IConnector {

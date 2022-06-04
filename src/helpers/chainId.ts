@@ -20,7 +20,7 @@ export const validateChainId = (chainId: number) => {
 export const ensureChainIdAllowed = (chainId: number, allowedChainIds: number[]) => {
     const isAllowed = allowedChainIds.some((id) => chainId === id)
     if (!isAllowed) {
-        return new ChainIdNotAllowedError(chainId, allowedChainIds)
+        throw new ChainIdNotAllowedError(chainId, allowedChainIds)
     }
 }
 

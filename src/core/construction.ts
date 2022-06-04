@@ -1,5 +1,5 @@
-import { AbstractConnector, ConnectionOptions, DeepRequired, IConnectionParams } from '../types'
-import { Connection } from './connection'
+import { AbstractConnector, ConnectionOptions, IConnectionParams, RequiredConnectionOptions } from '../types'
+import { Connection } from './connection/connection'
 import { mergeDeep } from '../helpers/mergeDeep'
 
 const DEFAULT_OPTIONS = {
@@ -10,12 +10,12 @@ const DEFAULT_OPTIONS = {
     },
 }
 
-export function initOptions(options: ConnectionOptions) {
-    return mergeDeep(DEFAULT_OPTIONS, options) as DeepRequired<ConnectionOptions>
+function initOptions(options: ConnectionOptions) {
+    return mergeDeep(DEFAULT_OPTIONS, options) as RequiredConnectionOptions
 }
 
 export function initConnection({ options, connectors }: IConnectionParams) {
-    return Connection.init(options, connectors)
+    return Connection.init(initOptions(options), connectors)
 }
 
 export function createConnector<T = void>(impl: AbstractConnector<T>) {

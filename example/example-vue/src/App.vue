@@ -14,7 +14,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import ConnectorCard from "@/components/ConnectorCard.vue";
-import {initConnection, MetaMask, WalletConnect, WalletLink} from "@whitelabel-solutions/wallet-connector"
+import {initConnection, MetaMask, WalletConnect, WalletLink, ChainIdNotAllowedError} from "@whitelabel-solutions/wallet-connector"
 import ConnectionCard from "@/components/ConnectionCard.vue";
 
 export default defineComponent({
@@ -42,7 +42,13 @@ export default defineComponent({
           chainId
         })
       ]
-      connection.value = await initConnection({options, connectors})
+      try{
+        connection.value = await initConnection({options, connectors})
+
+      } catch(e){
+        console.warn(e)
+      }
+
     })
     return {connection}
   }
