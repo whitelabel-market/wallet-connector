@@ -4,6 +4,7 @@ import { mergeDeep } from '../helpers/mergeDeep'
 
 const DEFAULT_OPTIONS = {
     allowedChainIds: null,
+    desiredChainIdOrChain: null,
     cache: {
         enabled: true,
         key: 'cached-connector',

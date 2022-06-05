@@ -9,11 +9,11 @@ export class ConnectorWrapperBase {
         this.status = ConnectorStatus.DISCONNECTED
     }
 
-    protected _baseRemoveAllListeners() {
+    protected removeAllListeners() {
         this.provider?.removeAllListeners()
     }
 
-    protected _reportError(error: Error) {
+    protected reportError(error: Error) {
         this.error = error
         this.status = ConnectorStatus.ERROR
     }

@@ -23,12 +23,13 @@ export default defineComponent({
   setup() {
     const appName = "wallet-connector-example-vue"
     const infuraId = "69b854375f754ababacab55f40fceca8"
-    const chainId = 4
+    const chainId = 1
     const connection = ref<any>(null)
 
     onMounted(async () => {
       const options = {
         allowedChainIds: [chainId],
+        desiredChainOrChainId: chainId,
         cache: {
           enabled: true
         }

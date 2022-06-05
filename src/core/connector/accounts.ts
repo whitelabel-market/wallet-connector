@@ -1,46 +1,46 @@
-import { IConnector } from '../../types'
+import { IConnector, RequiredConnectionOptions } from '../../types'
 import { ConnectorWrapperWithChainId } from './chainId'
 
 export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
     accounts: string[] | undefined
 
-    constructor(impl: IConnector, allowedChainIds: number[] | null) {
-        super(impl, allowedChainIds)
+    constructor(impl: IConnector, options: RequiredConnectionOptions) {
+        super(impl, options)
     }
 
     get selectedAccount() {
         return this.accounts ? this.accounts[0] : undefined
     }
 
-    protected _addAccountsChangedListener() {
-        this.provider?.on('accountsChanged', this._onAccountsChanged)
+    protected addAccountsChangedListener() {
+        this.provider?.on('accountsChanged', this.onAccountsChanged.bind(this))
     }
 
-    protected async _getAccounts() {
+    protected async getAccounts() {
         try {
-            return this._onAccountsChanged(await this._getRequestAccounts())
+            return this.onAccountsChanged(await this.getRequestAccounts())
         } catch (error: any) {
-            const accounts = await this._getEthAccounts()
+            const accounts = await this.getEthAccounts()
             if (accounts?.length) {
-                return this._onAccountsChanged(accounts)
+                return this.onAccountsChanged(accounts)
             } else {
                 throw error
             }
         }
     }
 
-    protected _onAccountsChanged(accounts: string[]) {
+    protected onAccountsChanged(accounts: string[]) {
         if (!accounts.length) {
             throw new Error('No accounts returned')
         }
         return (this.accounts = accounts)
     }
 
-    private _getRequestAccounts() {
+    private getRequestAccounts() {
         return this.provider?.request({ method: 'eth_requestAccounts' }) as Promise<string[]>
     }
 
-    private _getEthAccounts() {
+    private getEthAccounts() {
         return this.provider?.request({ method: 'eth_accounts' }) as Promise<string[]>
     }
 }

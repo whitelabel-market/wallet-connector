@@ -1,11 +1,15 @@
-import initConnection from './core'
+import { initConnection, ChainIdNotAllowedError } from './core'
 import Connectors from './connectors'
-import { ConnectorStatus, type IConnector, type ConnectionOptions, type ConnectResult } from './types'
-import { ChainIdNotAllowedError } from './helpers/chainId'
+import {
+    ConnectorStatus,
+    type IConnector,
+    type IConnectorWrapper,
+    type ConnectionOptions,
+    type ConnectResult,
+} from './types'
 
 const { Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, WalletLink } = Connectors
 
-export type { IConnector, ConnectionOptions, ConnectResult }
 export {
     initConnection,
     Connectors,
@@ -18,4 +22,8 @@ export {
     MetaMask,
     WalletConnect,
     WalletLink,
+    IConnector,
+    IConnectorWrapper,
+    ConnectionOptions,
+    ConnectResult,
 }

@@ -1,3 +1,4 @@
 import { initConnection } from './construction'
+import { ChainIdNotAllowedError } from './connector/chainId'
 
-export default initConnection
+export { initConnection, ChainIdNotAllowedError }

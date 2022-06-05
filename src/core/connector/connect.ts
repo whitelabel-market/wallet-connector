@@ -1,34 +1,38 @@
 import { ConnectorWrapperWithAccounts } from './accounts'
-import { ConnectorStatus, IConnection, IConnector, ProviderConnectInfo } from '../../types'
+import { IConnection, IConnector, ProviderConnectInfo } from '../../types'
 import LocalStorage from '../../helpers/localStorage'
 
 export class ConnectorWrapperConnect extends ConnectorWrapperWithAccounts {
-    private _storage: LocalStorage | undefined
+    private storage: LocalStorage | undefined
 
     constructor(impl: IConnector, connection: IConnection) {
-        super(impl, connection.options.allowedChainIds)
-        this._storage = connection.options.cache.enabled ? connection.storage : undefined
+        super(impl, connection.options)
+        this.storage = connection.options.cache.enabled ? connection.storage : undefined
     }
 
-    protected _addConnectListener() {
-        this.provider?.on('connect', this._onConnect)
+    protected addConnectListener() {
+        this.provider?.on('connect', this.onConnect.bind(this))
     }
 
-    protected async _connect() {
-        this.status = ConnectorStatus.LOADING
+    protected async activate() {
         this.provider = await this.impl.connectImpl()
-        this._storage?.set(this.id)
-        this.status = ConnectorStatus.CONNECTED
+        this.storage?.set(this.id)
+        await Promise.all([this.getAccounts(), this.getChainId()])
+        this.addChainChangedListener()
+        this.addAccountsChangedListener()
+        this.addConnectListener()
     }
 
-    protected async _disconnect() {
-        this.status = ConnectorStatus.LOADING
+    protected async deactivate() {
+        this.removeAllListeners()
         await this.impl.disconnectImpl()
-        this._storage?.remove()
-        this.status = ConnectorStatus.DISCONNECTED
+        this.accounts = undefined
+        this.chainId = undefined
+        this.provider = undefined
+        this.storage?.remove()
     }
 
-    protected _onConnect({ chainId }: ProviderConnectInfo) {
-        super._onChainChanged(chainId)
+    protected onConnect({ chainId }: ProviderConnectInfo) {
+        return this.onChainChanged(chainId)
     }
 }

@@ -1,35 +1,81 @@
-import { IConnector } from '../../types'
+import { AddEthereumChainParameter, IConnector, RequiredConnectionOptions } from '../../types'
 import { ConnectorBridge } from './bridge'
 
 export class ConnectorWrapperWithChainId extends ConnectorBridge {
     chainId: number | undefined
+
+    private readonly desiredChainId: string | null
     private validator: ChainIdValidator
 
-    constructor(impl: IConnector, private allowedChainIds: number[] | null) {
+    constructor(impl: IConnector, private options: RequiredConnectionOptions) {
         super(impl)
-        this.validator = new ChainIdValidator()
+        this.validator = new ChainIdValidator(options.allowedChainIds)
+        this.desiredChainId = this.validator.parseDesiredChainId(options.desiredChainOrChainId)
     }
 
-    protected _addChainChangedListener() {
-        this.provider?.on('chainChanged', this._onChainChanged)
-        this.provider?.on('connect', ({ chainId }) => this._onChainChanged(chainId))
+    protected addChainChangedListener() {
+        this.provider?.on('chainChanged', this.onChainChanged.bind(this))
     }
 
-    protected async _getChainId(): Promise<number> {
-        const chainId = await this._getChainIdFromEthChainId()
-        return this._onChainChanged(chainId)
+    protected async getChainId(): Promise<number | undefined> {
+        const chainId = await this.getChainIdFromEthChainId()
+        return this.onChainChanged(chainId)
     }
 
-    protected _onChainChanged(newChainId: number | string) {
-        const chainId = this.validator.parse(newChainId)
-        this.validator.validate(chainId)
-        if (this.allowedChainIds && this.allowedChainIds.length > 0) {
-            this.validator.ensureAllowance(chainId, this.allowedChainIds)
+    protected async onChainChanged(newChainId: number | string) {
+        try {
+            const chainId = this.validator.parse(newChainId)
+            this.validator.validate(chainId)
+            this.validator.ensureAllowanceIfIntended(chainId)
+            return (this.chainId = chainId)
+        } catch (error: any) {
+            if (error instanceof ChainIdNotAllowedError && !!this.desiredChainId) {
+                try {
+                    await this.switchOrAddEthChain()
+                } catch (error: any) {
+                    this.reportError(error)
+                }
+            } else {
+                this.reportError(error)
+            }
         }
-        return (this.chainId = chainId)
     }
 
-    private async _getChainIdFromEthChainId(): Promise<string> {
+    private switchOrAddEthChain() {
+        try {
+            return this.switchEthChain()
+        } catch (error: any) {
+            const { desiredChainOrChainId } = this.options
+            const desiredChainIsObject = desiredChainOrChainId && typeof desiredChainOrChainId !== 'number'
+            if (error.code === 4902 && desiredChainIsObject) {
+                try {
+                    return this.addEthChain()
+                } catch (error: any) {
+                    this.reportError(error)
+                }
+            } else {
+                this.reportError(error)
+            }
+        }
+    }
+
+    private switchEthChain() {
+        return this.provider?.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: this.desiredChainId }],
+        })
+    }
+
+    private addEthChain() {
+        return this.provider?.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+                { ...(this.options.desiredChainOrChainId as AddEthereumChainParameter), chainId: this.desiredChainId },
+            ],
+        })
+    }
+
+    private async getChainIdFromEthChainId(): Promise<string> {
         return this.provider?.request({
             method: 'eth_chainId',
         }) as Promise<string>
@@ -50,6 +96,8 @@ export class ChainIdNotAllowedError extends Error {
 class ChainIdValidator {
     static MAX_SAFE_CHAIN_ID = 4503599627370476
 
+    constructor(private allowedChainIds: number[] | null) {}
+
     parse(chainId: number | string) {
         if (typeof chainId === 'number') {
             return chainId
@@ -58,16 +106,37 @@ class ChainIdValidator {
         }
     }
 
+    parseHex(chainId: number | string) {
+        return '0x' + this.parse(chainId).toString(16)
+    }
+
     validate(chainId: number) {
         if (!Number.isInteger(chainId) || chainId <= 0 || chainId > ChainIdValidator.MAX_SAFE_CHAIN_ID) {
             return new Error(`Invalid chainId ${chainId}`)
         }
     }
 
-    ensureAllowance(chainId: number, allowedChainIds: number[]) {
-        const isAllowed = allowedChainIds.some((id) => chainId === id)
+    ensureAllowanceIfIntended(chainId: number) {
+        const isIntended = !!this.allowedChainIds && this.allowedChainIds.length > 0
+        if (isIntended) {
+            this.ensureAllowance(chainId)
+        }
+    }
+
+    ensureAllowance(chainId: number) {
+        const isAllowed = this.allowedChainIds?.some((id) => chainId === id)
         if (!isAllowed) {
-            throw new ChainIdNotAllowedError(chainId, allowedChainIds)
+            throw new ChainIdNotAllowedError(chainId, this.allowedChainIds || [])
+        }
+    }
+
+    parseDesiredChainId(desiredChainOrChainId: number | AddEthereumChainParameter | null) {
+        if (desiredChainOrChainId) {
+            const chainId =
+                typeof desiredChainOrChainId === 'number' ? desiredChainOrChainId : desiredChainOrChainId?.chainId
+            return this.parseHex(chainId)
+        } else {
+            return null
         }
     }
 }

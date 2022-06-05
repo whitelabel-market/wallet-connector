@@ -103,6 +103,7 @@ export type ConnectResult = Promise<IExternalProvider>
 
 export type ConnectionOptions = {
     allowedChainIds?: number[] | null
+    desiredChainOrChainId?: number | AddEthereumChainParameter
     cache?: {
         enabled?: boolean
         key?: string
