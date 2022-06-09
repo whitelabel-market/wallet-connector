@@ -16,18 +16,18 @@ const initOptions = (options: ConnectionOptions) => mergeDeep(DEFAULT_OPTIONS, o
 
 export class Connection extends ConnectorFactory implements IConnection {
     options: RequiredConnectionOptions
-    storage: LocalStorage
+    _storage: LocalStorage
 
     constructor(options: ConnectionOptions, connectors: IConnector[]) {
         super()
         this.options = initOptions(options)
-        this.storage = new LocalStorage(this.options.cache.key)
-        super.init(connectors, this)
+        this._storage = new LocalStorage(this.options.cache.key)
+        this._init(connectors, this)
     }
 
     loadFromCache() {
         if (this.options.cache?.enabled) {
-            const id = this.storage.get()
+            const id = this._storage.get()
             if (id) {
                 if (this.connectors[id]) {
                     return this.connectors[id].connect()

@@ -15,7 +15,7 @@ export class ConnectorFactory extends EventEmitter implements IConnectorFactory 
         this.connectors = {}
     }
 
-    init(connectors: IConnector[], connection: IConnection) {
+    _init(connectors: IConnector[], connection: IConnection) {
         connectors.forEach((impl) => {
             const connector = new ConnectorWrapper(impl, connection)
             Object.values(events).forEach((event) =>
@@ -27,12 +27,12 @@ export class ConnectorFactory extends EventEmitter implements IConnectorFactory 
         })
     }
 
-    add(connector: IConnectorWrapper) {
+    _add(connector: IConnectorWrapper) {
         this.activeConnectors[connector.id] = connector
         this.activeConnector = connector
     }
 
-    remove(connector: IConnectorWrapper) {
+    _remove(connector: IConnectorWrapper) {
         this.activeConnectors[connector.id] && delete this.activeConnectors[connector.id]
         const activeConnectors = Object.values(this.activeConnectors)
         this.activeConnector = activeConnectors.length > 0 ? activeConnectors[activeConnectors.length - 1] : undefined

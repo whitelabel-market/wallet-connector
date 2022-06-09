@@ -7,7 +7,7 @@ export class ConnectorWrapperConnect extends ConnectorWrapperWithAccounts {
 
     constructor(impl: IConnector, connection: IConnection) {
         super(impl, connection.options)
-        this._storage = connection.options.cache.enabled ? connection.storage : undefined
+        this._storage = connection.options.cache.enabled ? connection._storage : undefined
     }
 
     protected async _activate() {

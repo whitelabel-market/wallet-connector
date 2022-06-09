@@ -93,57 +93,187 @@ export interface IExternalProvider {
     ) => void
 }
 
-export type ConnectResult = Promise<IExternalProvider>
-
+/**
+ * wallet-connector connection options
+ */
 export type ConnectionOptions = {
+    /**
+     * List of allowed chain ids. If nothing provided, all chain ids will be allowed
+     */
     allowedChainIds?: number[] | null
+
+    /**
+     * Chain parameters or chain id to set a desired network.
+     * Connector will initiate a network switch, if the user is connected to another chain id.
+     * Handles request for adding the chain parameters if it is unknown to the provider.
+     * If desiredChainOrChainId isn't set, no chain switch will be initiated.
+     */
     desiredChainOrChainId?: number | AddEthereumChainParameter
     cache?: {
+        /**
+         * Indicates if a provider should be saved in the local storage.
+         * @defaultValue true
+         */
         enabled?: boolean
+
+        /**
+         * Key to access the provider in the local storage.
+         * @defaultValue 'wallet-connector-provider'
+         */
         key?: string
     }
 }
 
+/**
+ * wallet-connector connection options including default options
+ */
 export type RequiredConnectionOptions = DeepRequired<ConnectionOptions>
 
 export interface IConnectorInfo {
+    /**
+     * The connector id
+     */
     id: string
+
+    /**
+     * The connector name
+     */
     name: string
+
+    /**
+     * The connector logo svg
+     */
     logo: string
 }
 
+/**
+ * wallet-connector connector implementation
+ */
 export interface IConnector extends IConnectorInfo {
-    connectImpl(): ConnectResult
+    /**
+     * The connect-implementation of a connector
+     * @returns {(Promise<IExternalProvider>)} The provider used for establishing a connection
+     * @internal
+     */
+    connectImpl(): Promise<IExternalProvider>
+
+    /**
+     * The disconnect-implementation of a connector
+     * @internal
+     */
     disconnectImpl(): void
 }
+/**
+ * This is the description of the interface
+ *
+ * @interface EditDialogField
+ * @member {string} label is used for whatever reason
+ * @field {string} prop is used for other reason
+ */
 
+/**
+ * wallet-connector wrapper for a connector. Holds and manages a specific connector implementation.
+ */
 export interface IConnectorWrapper extends IConnectorInfo {
+    /**
+     * The provider
+     */
     provider: IExternalProvider | undefined
+
+    /**
+     * All connected accounts
+     */
     accounts: string[] | undefined
+
+    /**
+     * The connected chain id
+     */
     chainId: number | undefined
+
+    /**
+     * The currently selected account
+     */
     selectedAccount: string | undefined
 
+    /**
+     * Any errors that may have occurred
+     */
     error: Error | undefined
+
+    /**
+     * Indicates if the current provider is in loading state
+     * @defaultValue false
+     */
     loading: boolean
+
+    /**
+     * Indicates if the current provider is connected
+     * @defaultValue false
+     */
     connected: boolean
 
+    /**
+     * Connects to the provider
+     * @returns {(Promise<IConnectorWrapper>)} The responsible connector instance
+     */
     connect: () => Promise<IConnectorWrapper>
+
+    /**
+     * Disconnects the provider
+     */
     disconnect: () => void
 }
 
 export interface IConnectorFactory {
+    /**
+     * Object to reference all initialized connector by id
+     */
     connectors: Record<string, IConnectorWrapper>
+
+    /**
+     * Object to reference all active connector by id
+     */
     activeConnectors: Record<string, IConnectorWrapper>
+
+    /**
+     * The currently active connector
+     */
     activeConnector: IConnectorWrapper | undefined
 
-    add(wrapper: IConnectorWrapper): void
-    remove(wrapper: IConnectorWrapper): void
-    init(connectors: IConnector[], wrapper: IConnection): void
+    /**
+     * Adds a connector to active connectors
+     * @internal
+     */
+    _add(wrapper: IConnectorWrapper): void
+
+    /**
+     * Removes a connector from active connectors
+     * @internal
+     */
+    _remove(wrapper: IConnectorWrapper): void
+
+    /**
+     * Initializes a connector
+     * @internal
+     */
+    _init(connectors: IConnector[], wrapper: IConnection): void
 }
 
+/**
+ * wallet-connector connection. Initializes and manages connectors.
+ * @public
+ */
 export interface IConnection extends IConnectorFactory {
+    /**
+     * Options passed to the connection instance by the user
+     */
     options: RequiredConnectionOptions
-    storage: LocalStorage
+
+    /**
+     * The local connector storage
+     * @internal
+     */
+    _storage: LocalStorage
 }
 
 export abstract class AbstractConnector<T = void> implements IConnector {
@@ -159,6 +289,6 @@ export abstract class AbstractConnector<T = void> implements IConnector {
         return this
     }
 
-    abstract connectImpl(): ConnectResult
+    abstract connectImpl(): Promise<IExternalProvider>
     abstract disconnectImpl(): void
 }
