@@ -1,22 +1,22 @@
-import Core from "./core";
-import Providers from "./providers";
-import type {
-    IProvider,
-    ConnectorUserOptions,
-    ConnectorOptions,
-    ProviderType,
-    ConnectFn,
-    ConnectResult,
-} from "./types";
+import { Connection, ChainIdNotAllowedError } from './core'
+import Connectors from './connectors'
+import { type IConnection, type IConnector, type IConnectorWrapper, type ConnectionOptions } from './types'
 
-const { Connector } = Core;
+const { Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, WalletLink } = Connectors
 
-export type {
-    IProvider,
-    ConnectorUserOptions,
-    ProviderType,
-    ConnectorOptions,
-    ConnectFn,
-    ConnectResult,
-};
-export { Connector, Providers };
+export {
+    Connection,
+    ChainIdNotAllowedError,
+    Connectors,
+    Authereum,
+    BinanceChain,
+    Fortmatic,
+    Frame,
+    MetaMask,
+    WalletConnect,
+    WalletLink,
+    IConnection,
+    IConnector,
+    IConnectorWrapper,
+    ConnectionOptions,
+}
