@@ -1,3 +1,42 @@
+## [1.0.6](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.5...v1.0.6) (2022-06-02)
+
+
+### Bug Fixes
+
+* missing provider for mobile wallets ([77cf738](https://github.com/whitelabel-market/wallet-connector/commit/77cf73813f1a53bf9218c365d585978b451c98c7))
+
+## [1.0.5](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.4...v1.0.5) (2022-06-02)
+
+
+### Bug Fixes
+
+* wallet connection in metamask app ([d57cba4](https://github.com/whitelabel-market/wallet-connector/commit/d57cba40531ba3df4f4764fa6abfadfa12304325))
+
+## [1.0.4](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.3...v1.0.4) (2022-05-30)
+
+
+### Bug Fixes
+
+* conflicting metamask and coinbase wallet in browser ([21df7d0](https://github.com/whitelabel-market/wallet-connector/commit/21df7d0a51ad9cb8a1cab6a7f77cbb8d09c7978a))
+
+## [1.0.3](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.2...v1.0.3) (2022-05-29)
+
+
+### Bug Fixes
+
+* mobile metamask open app ([ef8ee52](https://github.com/whitelabel-market/wallet-connector/commit/ef8ee528563ea15be31504f4dded08ba52ce6432))
+
+## [1.0.2](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.1...v1.0.2) (2022-05-29)
+
+
+### Bug Fixes
+
+* authereum and fortmatic option types ([656f820](https://github.com/whitelabel-market/wallet-connector/commit/656f8203e571005649aba60a8d02518e277b936c))
+* **connector.ts:** duplicated wrong type imports ([b6ce8be](https://github.com/whitelabel-market/wallet-connector/commit/b6ce8bedc47bd22e6d718c711e6014ec6714993e))
+* parse and validate chainid if not available ([24c0efa](https://github.com/whitelabel-market/wallet-connector/commit/24c0efaac0371044660cd72b01b10bb42f5a1ddd))
+* switch coinbase sdk to module import ([532a914](https://github.com/whitelabel-market/wallet-connector/commit/532a914b4036e145cbdbf3cec361913bbc7f7608))
+* walletconnect provide rpc options. Metamask open link if not exists ([4bfad83](https://github.com/whitelabel-market/wallet-connector/commit/4bfad8318b18bbb3e156028ae56f65412e81f727))
+
 ## [1.0.1](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.0...v1.0.1) (2022-05-12)
 
 
