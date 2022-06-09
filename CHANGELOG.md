@@ -1,3 +1,38 @@
+# [2.0.0](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.6...v2.0.0) (2022-06-09)
+
+
+### Bug Fixes
+
+* error reporting on chain switch request ([1a86c4a](https://github.com/whitelabel-market/wallet-connector/commit/1a86c4a8602763588a6adb687922c6a8ab32a205))
+
+
+### chore
+
+* merge branch 'main' into feature/multi_provider ([6b070a9](https://github.com/whitelabel-market/wallet-connector/commit/6b070a92364b4637efdac40dc83d8bc8e6bfbada))
+
+
+### Code Refactoring
+
+* move external class into wrapper and refactor exports ([743c89c](https://github.com/whitelabel-market/wallet-connector/commit/743c89c9accb9524e3611c4782c63df65fa1de05))
+
+
+### Features
+
+* introduce provider details in base ([ad771c5](https://github.com/whitelabel-market/wallet-connector/commit/ad771c536b5f35ad312c4e3e2f3f0af41ddf0731))
+* switch or add chain if wrong network ([eecf439](https://github.com/whitelabel-market/wallet-connector/commit/eecf439789f62f232a9ea6e4da684970d7433fd1))
+
+
+### Reverts
+
+* path alias ([96770b7](https://github.com/whitelabel-market/wallet-connector/commit/96770b7106a29d8271e3c5442c30ae1a77a31822))
+
+
+### BREAKING CHANGES
+
+* instantiate by passing the specific options to the connector
+* connection is initialized by calling initConnection and connectors can be accessed
+at top level
+
 ## [1.0.6](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.5...v1.0.6) (2022-06-02)
 
 
