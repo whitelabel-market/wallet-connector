@@ -7,17 +7,17 @@
 
     <div class="card-body">
       <ConnectorCardTable :connector="connector"/>
-      <button @click="connector.status === 'connected' ? connector.disconnect() : connect()">
-        {{ label[connector.status] }}
+      <button @click="connector.connected ? connector.disconnect() : connect()">
+        {{ label }}
       </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from 'vue';
+import {computed, defineComponent, PropType} from 'vue';
 import ConnectorCardTable from "@/components/ConnectorCardTable.vue";
-import {ChainIdNotAllowedError, ConnectorStatus, type IConnectorWrapper} from "@whitelabel-solutions/wallet-connector";
+import {ChainIdNotAllowedError, type IConnectorWrapper} from "@whitelabel-solutions/wallet-connector";
 
 export default defineComponent({
   name: 'ConnectorCard',
@@ -25,20 +25,19 @@ export default defineComponent({
   props: {
     connector: Object as PropType<IConnectorWrapper>,
   },
-  setup({connector}){
+  setup({connector}) {
     const connect = async () => {
       await connector?.connect()
-      if(connector?.error instanceof ChainIdNotAllowedError){
+      if (connector?.error instanceof ChainIdNotAllowedError) {
         console.warn("Invalid Chainid")
       }
     }
 
-    const label = {
-      [ConnectorStatus.LOADING]: "Loading",
-      [ConnectorStatus.CONNECTED]: "Disconnect",
-      [ConnectorStatus.DISCONNECTED]: "Connect",
-      [ConnectorStatus.ERROR]: "Try Again"
-    }
+    const label = computed(() => {
+      return connector?.connected ? "Disconnect" :
+        (connector?.loading ? "Loading" :
+          (connector?.error ? "Try Again" : "Connect"))
+    })
 
     return {connect, label}
   }

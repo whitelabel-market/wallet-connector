@@ -15,6 +15,7 @@ const esbuildPlugin = esbuild()
 const dtsPlugin = [dts()]
 
 const externals = [
+    'eventemitter3',
     '@coinbase/wallet-sdk',
     '@walletconnect/web3-provider',
     'authereum/dist',

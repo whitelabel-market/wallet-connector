@@ -1,14 +1,7 @@
-import generateId from '../helpers/generateId'
+import generateId from '../helpers/id'
 import LocalStorage from '../helpers/localStorage'
 
 export type DeepRequired<T> = { [K in keyof T]: DeepRequired<T[K]> } & Required<T>
-
-export enum ConnectorStatus {
-    LOADING = 'loading',
-    ERROR = 'error',
-    CONNECTED = 'connected',
-    DISCONNECTED = 'disconnected',
-}
 
 // per EIP-1193
 export interface RequestArguments {
@@ -83,6 +76,7 @@ export interface IExternalProvider {
     isStatus?: boolean
     networkVersion: string
     selectedAddress: string
+    connected?: boolean
 
     on<K extends EventKeys>(event: K, eventHandler: EventHandler<K>): void
     enable(): Promise<string[]>
@@ -112,11 +106,6 @@ export type ConnectionOptions = {
 
 export type RequiredConnectionOptions = DeepRequired<ConnectionOptions>
 
-export interface IConnectionParams {
-    options: ConnectionOptions
-    connectors: IConnector[]
-}
-
 export interface IConnectorInfo {
     id: string
     name: string
@@ -132,17 +121,19 @@ export interface IConnectorWrapper extends IConnectorInfo {
     provider: IExternalProvider | undefined
     accounts: string[] | undefined
     chainId: number | undefined
-    error: Error | undefined
-    status: ConnectorStatus | undefined
     selectedAccount: string | undefined
+
+    error: Error | undefined
+    loading: boolean
+    connected: boolean
 
     connect: () => Promise<IConnectorWrapper>
     disconnect: () => void
 }
 
 export interface IConnectorFactory {
-    connectors: IConnectorWrapper[]
-    activeConnectors: IConnectorWrapper[]
+    connectors: Record<string, IConnectorWrapper>
+    activeConnectors: Record<string, IConnectorWrapper>
     activeConnector: IConnectorWrapper | undefined
 
     add(wrapper: IConnectorWrapper): void

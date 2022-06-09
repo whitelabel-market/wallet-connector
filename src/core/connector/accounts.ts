@@ -1,5 +1,6 @@
 import { IConnector, RequiredConnectionOptions } from '../../types'
 import { ConnectorWrapperWithChainId } from './chainId'
+import { events } from './base'
 
 export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
     accounts: string[] | undefined
@@ -12,35 +13,37 @@ export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
         return this.accounts ? this.accounts[0] : undefined
     }
 
-    protected addAccountsChangedListener() {
-        this.provider?.on('accountsChanged', this.onAccountsChanged.bind(this))
+    protected _addAccountsChangedListener() {
+        this.provider?.on('accountsChanged', this._onAccountsChanged.bind(this))
     }
 
-    protected async getAccounts() {
+    protected async _getAccounts() {
         try {
-            return this.onAccountsChanged(await this.getRequestAccounts())
+            return this._onAccountsChanged(await this._getRequestAccounts())
         } catch (error: any) {
-            const accounts = await this.getEthAccounts()
+            const accounts = await this._getEthAccounts()
             if (accounts?.length) {
-                return this.onAccountsChanged(accounts)
+                return this._onAccountsChanged(accounts)
             } else {
                 throw error
             }
         }
     }
 
-    protected onAccountsChanged(accounts: string[]) {
+    protected _onAccountsChanged(accounts: string[]) {
         if (!accounts.length) {
             throw new Error('No accounts returned')
         }
-        return (this.accounts = accounts)
+        this.accounts = accounts
+        this.emit(events.ACCOUNTS_CHANGED, this.accounts)
+        return this.accounts
     }
 
-    private getRequestAccounts() {
+    private _getRequestAccounts() {
         return this.provider?.request({ method: 'eth_requestAccounts' }) as Promise<string[]>
     }
 
-    private getEthAccounts() {
+    private _getEthAccounts() {
         return this.provider?.request({ method: 'eth_accounts' }) as Promise<string[]>
     }
 }

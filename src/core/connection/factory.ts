@@ -1,30 +1,40 @@
 import { IConnector, IConnectorFactory, IConnectorWrapper, IConnection } from '../../types'
 import { ConnectorWrapper } from '../connector/wrapper'
+import EventEmitter from 'eventemitter3'
+import { events } from '../connector/base'
 
-export class ConnectorFactory implements IConnectorFactory {
-    connectors!: IConnectorWrapper[]
-    activeConnectors: IConnectorWrapper[]
+export class ConnectorFactory extends EventEmitter implements IConnectorFactory {
+    connectors: Record<string, IConnectorWrapper>
+    activeConnectors: Record<string, IConnectorWrapper>
+
+    activeConnector: IConnectorWrapper | undefined
 
     constructor() {
-        this.activeConnectors = []
+        super()
+        this.activeConnectors = {}
+        this.connectors = {}
     }
 
     init(connectors: IConnector[], connection: IConnection) {
-        this.connectors = connectors.map((impl) => new ConnectorWrapper(impl, connection))
+        connectors.forEach((impl) => {
+            const connector = new ConnectorWrapper(impl, connection)
+            Object.values(events).forEach((event) =>
+                connector.on(event, (data) => {
+                    this.emit(event, data, connector)
+                })
+            )
+            this.connectors[connector.id] = connector
+        })
     }
 
     add(connector: IConnectorWrapper) {
-        this.activeConnectors.unshift(connector)
+        this.activeConnectors[connector.id] = connector
+        this.activeConnector = connector
     }
 
     remove(connector: IConnectorWrapper) {
-        const i = this.activeConnectors.findIndex((c) => c.id === connector.id)
-        if (i > -1) {
-            this.activeConnectors.splice(i, 1)
-        }
-    }
-
-    get activeConnector() {
-        return this.activeConnectors.length > 0 ? this.activeConnectors[0] : undefined
+        this.activeConnectors[connector.id] && delete this.activeConnectors[connector.id]
+        const activeConnectors = Object.values(this.activeConnectors)
+        this.activeConnector = activeConnectors.length > 0 ? activeConnectors[activeConnectors.length - 1] : undefined
     }
 }

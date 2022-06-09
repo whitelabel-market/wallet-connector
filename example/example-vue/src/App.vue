@@ -12,9 +12,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref} from 'vue';
+import {defineComponent, onMounted, reactive, ref} from 'vue';
 import ConnectorCard from "@/components/ConnectorCard.vue";
-import {initConnection, MetaMask, WalletConnect, WalletLink, ChainIdNotAllowedError} from "@whitelabel-solutions/wallet-connector"
+import {
+  MetaMask,
+  WalletConnect,
+  WalletLink,
+  ChainIdNotAllowedError,
+  Connection, IConnectorWrapper
+} from "@whitelabel-solutions/wallet-connector"
 import ConnectionCard from "@/components/ConnectionCard.vue";
 
 export default defineComponent({
@@ -24,33 +30,36 @@ export default defineComponent({
     const appName = "wallet-connector-example-vue"
     const infuraId = "69b854375f754ababacab55f40fceca8"
     const chainId = 1
-    const connection = ref<any>(null)
-
-    onMounted(async () => {
-      const options = {
-        allowedChainIds: [chainId],
-        desiredChainOrChainId: chainId,
-        cache: {
-          enabled: true
-        }
+    const options = {
+      allowedChainIds: [chainId, 3],
+      desiredChainOrChainId: chainId,
+      cache: {
+        enabled: true
       }
-      const connectors = [
-        MetaMask(),
-        WalletConnect({infuraId}),
-        WalletLink({
-          appName,
-          rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
-          chainId
-        })
-      ]
-      try{
-        connection.value = await initConnection({options, connectors})
+    }
+    const connectors = [
+      MetaMask(),
+      WalletConnect({infuraId}),
+      WalletLink({
+        appName,
+        rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
+        chainId
+      })
+    ]
 
-      } catch(e){
-        console.warn(e)
-      }
+    const connection = ref<Connection>(new Connection(options, connectors))
 
+    connection.value.on("error", (error: any, connector: IConnectorWrapper) => {
+      console.warn(error.message, connector)
     })
+
+    connection.value.on("connect", (_, connector: IConnectorWrapper) => {
+      console.log("Connect", connector)
+    })
+
+
+    connection.value.loadFromCache()
+
     return {connection}
   }
 });
@@ -116,21 +125,6 @@ td:first-child {
 td:last-child {
   width: 50%;
 }
-
-.status-wrapper {
-  display: flex;
-  align-items: center;
-  text-transform: capitalize;
-}
-
-.status {
-  display: block;
-  border-radius: 100%;
-  width: 8px;
-  height: 8px;
-  margin-right: 4px;
-}
-
 </style>
 
 <style scoped>

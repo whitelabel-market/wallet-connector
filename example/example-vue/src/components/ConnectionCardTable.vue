@@ -9,10 +9,10 @@
     <tr>
       <td>Status</td>
       <td>
-        <div class="status-wrapper">
-          <span class="status" :style="{backgroundColor: wrapperColor[connectionStatus]}"></span>
-          <span>{{ connectionStatus }}</span>
-        </div>
+        <StatusIndicator
+          :connected="connection.activeConnector?.connected"
+          :error="!!connection.activeConnector?.error"
+          :loading="connection.activeConnector?.loading"/>
       </td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td>Error</td>
-      <td>{{ connectionStatus === 'error' ? connection.activeConnector.error.message : 'None' }}</td>
+      <td>{{ connection.activeConnector?.error ? connection.activeConnector.error.message : 'None' }}</td>
     </tr>
     <tr>
       <td>Chain Id</td>
@@ -31,23 +31,15 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent} from 'vue';
-import {ConnectorStatus} from "@whitelabel-solutions/wallet-connector";
+import {computed, defineComponent, PropType} from 'vue';
+import {IConnection} from "@whitelabel-solutions/wallet-connector";
+import StatusIndicator from "@/components/StatusIndicator.vue";
 
 export default defineComponent({
   name: 'ConnectionCardTable',
+  components: {StatusIndicator},
   props: {
-    connection: Object,
+    connection: Object as PropType<IConnection>
   },
-  setup({connection}) {
-    const connectionStatus = computed(() => connection?.activeConnector?.status ?? ConnectorStatus.DISCONNECTED)
-    const wrapperColor = {
-      disconnected: "#e5e5e5",
-      loading: "#f0ad4e",
-      connected: "#5cb85c",
-      error: "#d9534f",
-    }
-    return {connectionStatus, wrapperColor}
-  }
 });
 </script>

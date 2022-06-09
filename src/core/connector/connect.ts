@@ -1,38 +1,34 @@
 import { ConnectorWrapperWithAccounts } from './accounts'
-import { IConnection, IConnector, ProviderConnectInfo } from '../../types'
+import { IConnection, IConnector } from '../../types'
 import LocalStorage from '../../helpers/localStorage'
 
 export class ConnectorWrapperConnect extends ConnectorWrapperWithAccounts {
-    private storage: LocalStorage | undefined
+    private _storage: LocalStorage | undefined
 
     constructor(impl: IConnector, connection: IConnection) {
         super(impl, connection.options)
-        this.storage = connection.options.cache.enabled ? connection.storage : undefined
+        this._storage = connection.options.cache.enabled ? connection.storage : undefined
     }
 
-    protected addConnectListener() {
-        this.provider?.on('connect', this.onConnect.bind(this))
+    protected async _activate() {
+        this.provider = await this._impl.connectImpl()
+        this._storage?.set(this.id)
+        await Promise.all([this._getAccounts(), this._getChainId()])
+        this._addChainChangedListener()
+        this._addAccountsChangedListener()
     }
 
-    protected async activate() {
-        this.provider = await this.impl.connectImpl()
-        this.storage?.set(this.id)
-        await Promise.all([this.getAccounts(), this.getChainId()])
-        this.addChainChangedListener()
-        this.addAccountsChangedListener()
-        this.addConnectListener()
-    }
-
-    protected async deactivate() {
-        this.removeAllListeners()
-        await this.impl.disconnectImpl()
+    protected async _deactivate() {
+        this._removeBaseListeners()
+        await this._impl.disconnectImpl()
         this.accounts = undefined
         this.chainId = undefined
         this.provider = undefined
-        this.storage?.remove()
+        this.error = undefined
+        this._storage?.remove()
     }
 
-    protected onConnect({ chainId }: ProviderConnectInfo) {
-        return this.onChainChanged(chainId)
+    get connected() {
+        return !!(!this.error && this.selectedAccount && this.selectedAccount.length > 0)
     }
 }

@@ -1,22 +1,25 @@
 import { ConnectorWrapperConnect } from './connect'
-import { ConnectorStatus, IConnection, IConnector, IConnectorWrapper } from '../../types'
+import { IConnection, IConnector, IConnectorWrapper } from '../../types'
+import { events } from './base'
 
 export class ConnectorWrapper extends ConnectorWrapperConnect implements IConnectorWrapper {
-    private connection: IConnection
+    private _connection: IConnection
 
     constructor(impl: IConnector, connection: IConnection) {
         super(impl, connection)
-        this.connection = connection
+        this._connection = connection
     }
 
     async connect() {
         try {
-            this.status = ConnectorStatus.LOADING
-            this.connection.add(this)
-            await this.activate()
-            this.status = ConnectorStatus.CONNECTED
+            this.loading = true
+            this._connection.add(this)
+            await this._activate()
+            this.emit(events.CONNECT, this)
+            this.loading = false
         } catch (error: any) {
-            this.reportError(error)
+            this._reportError(error)
+            this._connection.remove(this)
         }
 
         return this
@@ -24,12 +27,14 @@ export class ConnectorWrapper extends ConnectorWrapperConnect implements IConnec
 
     async disconnect() {
         try {
-            this.status = ConnectorStatus.LOADING
-            await this.deactivate()
-            this.connection.remove(this)
-            this.status = ConnectorStatus.DISCONNECTED
+            this.loading = true
+            await this._deactivate()
+            this._connection.remove(this)
+            this.loading = false
+            this.emit(events.DISCONNECT, this)
         } catch (error: any) {
-            this.reportError(error)
+            this._reportError(error)
+            this._connection.remove(this)
         }
     }
 }

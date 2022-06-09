@@ -1,81 +1,102 @@
 import { AddEthereumChainParameter, IConnector, RequiredConnectionOptions } from '../../types'
 import { ConnectorBridge } from './bridge'
+import { events } from './base'
 
 export class ConnectorWrapperWithChainId extends ConnectorBridge {
     chainId: number | undefined
 
-    private readonly desiredChainId: string | null
-    private validator: ChainIdValidator
+    private _validator: ChainIdValidator
 
     constructor(impl: IConnector, private options: RequiredConnectionOptions) {
         super(impl)
-        this.validator = new ChainIdValidator(options.allowedChainIds)
-        this.desiredChainId = this.validator.parseDesiredChainId(options.desiredChainOrChainId)
+        this._validator = new ChainIdValidator(options)
     }
 
-    protected addChainChangedListener() {
-        this.provider?.on('chainChanged', this.onChainChanged.bind(this))
+    get desiredChainId() {
+        return this._validator.desiredChainId
     }
 
-    protected async getChainId(): Promise<number | undefined> {
-        const chainId = await this.getChainIdFromEthChainId()
-        return this.onChainChanged(chainId)
-    }
-
-    protected async onChainChanged(newChainId: number | string) {
-        try {
-            const chainId = this.validator.parse(newChainId)
-            this.validator.validate(chainId)
-            this.validator.ensureAllowanceIfIntended(chainId)
-            return (this.chainId = chainId)
-        } catch (error: any) {
-            if (error instanceof ChainIdNotAllowedError && !!this.desiredChainId) {
-                try {
-                    await this.switchOrAddEthChain()
-                } catch (error: any) {
-                    this.reportError(error)
-                }
-            } else {
-                this.reportError(error)
+    protected async _validateChainId(newChainId: number | string) {
+        const chainId = this._validator.parse(newChainId)
+        const error = this._validator.validate(chainId)
+        if (error) {
+            this._reportError(error)
+            if (error instanceof ChainIdNotDesiredError) {
+                await this._switchOrAddEthChain()
             }
+        } else {
+            this.error = undefined
+        }
+        return chainId
+    }
+
+    protected _addChainChangedListener() {
+        this.provider?.on('chainChanged', this._onChainChanged.bind(this))
+    }
+
+    protected async _getChainId(): Promise<number | undefined> {
+        const chainId = await this._getChainIdFromEthChainId()
+        this.chainId = await this._validateChainId(chainId)
+        return this.chainId
+    }
+
+    protected async _onChainChanged(chainId: number | string) {
+        try {
+            this.loading = true
+            this.chainId = await this._validateChainId(chainId)
+            this.emit(events.CHAIN_CHANGED, this.chainId)
+            this.loading = false
+        } catch (error: any) {
+            this._reportError(error)
         }
     }
 
-    private switchOrAddEthChain() {
-        try {
-            return this.switchEthChain()
-        } catch (error: any) {
+    private async _switchOrAddEthChain() {
+        let error = await this._switchEthChain()
+        if (error) {
             const { desiredChainOrChainId } = this.options
             const desiredChainIsObject = desiredChainOrChainId && typeof desiredChainOrChainId !== 'number'
             if (error.code === 4902 && desiredChainIsObject) {
-                try {
-                    return this.addEthChain()
-                } catch (error: any) {
-                    this.reportError(error)
-                }
-            } else {
-                this.reportError(error)
+                error = await this._addEthChain()
             }
+        }
+        if (error) {
+            return error
+        }
+        this.error = undefined
+        this.emit(events.SWITCH_CHAIN, this._validator.parse(this.desiredChainId as string))
+    }
+
+    private async _switchEthChain() {
+        try {
+            await this.provider?.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: this.desiredChainId }],
+            })
+            this.emit(events.SWITCH_CHAIN, this._validator.parse(this.desiredChainId as string))
+        } catch (error: any) {
+            return error
         }
     }
 
-    private switchEthChain() {
-        return this.provider?.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: this.desiredChainId }],
-        })
+    private async _addEthChain() {
+        const params = {
+            ...(this.options.desiredChainOrChainId as AddEthereumChainParameter),
+            chainId: this.desiredChainId,
+        }
+
+        try {
+            await this.provider?.request({
+                method: 'wallet_addEthereumChain',
+                params: [params],
+            })
+            this.emit(events.ADD_CHAIN, params)
+        } catch (error: any) {
+            return error
+        }
     }
 
-    private addEthChain() {
-        return this.provider?.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-                { ...(this.options.desiredChainOrChainId as AddEthereumChainParameter), chainId: this.desiredChainId },
-            ],
-        })
-    }
-
-    private async getChainIdFromEthChainId(): Promise<string> {
+    private async _getChainIdFromEthChainId(): Promise<string> {
         return this.provider?.request({
             method: 'eth_chainId',
         }) as Promise<string>
@@ -93,10 +114,27 @@ export class ChainIdNotAllowedError extends Error {
     }
 }
 
+export class ChainIdNotDesiredError extends Error {
+    public readonly chainId: number
+
+    public constructor(chainId: number, desiredChainId: number) {
+        super(`chainId ${chainId} not desired as ${desiredChainId}`)
+        this.chainId = chainId
+        this.name = ChainIdNotDesiredError.name
+        Object.setPrototypeOf(this, ChainIdNotDesiredError.prototype)
+    }
+}
+
 class ChainIdValidator {
     static MAX_SAFE_CHAIN_ID = 4503599627370476
 
-    constructor(private allowedChainIds: number[] | null) {}
+    desiredChainId: string | null
+    allowedChainIds: number[] | null
+
+    constructor(options: RequiredConnectionOptions) {
+        this.desiredChainId = this.parseDesiredChainId(options.desiredChainOrChainId)
+        this.allowedChainIds = options.allowedChainIds
+    }
 
     parse(chainId: number | string) {
         if (typeof chainId === 'number') {
@@ -111,23 +149,42 @@ class ChainIdValidator {
     }
 
     validate(chainId: number) {
+        try {
+            this.validateChainIdFormat(chainId)
+            this.validateChainIdAllowed(chainId)
+            this.validateChainIdDesired(chainId)
+        } catch (error: any) {
+            return error
+        }
+    }
+
+    validateChainIdFormat(chainId: number) {
         if (!Number.isInteger(chainId) || chainId <= 0 || chainId > ChainIdValidator.MAX_SAFE_CHAIN_ID) {
-            return new Error(`Invalid chainId ${chainId}`)
+            throw new Error(`ChainId ${chainId} invalid: Unsupported format`)
+        } else {
+            return true
         }
     }
 
-    ensureAllowanceIfIntended(chainId: number) {
-        const isIntended = !!this.allowedChainIds && this.allowedChainIds.length > 0
-        if (isIntended) {
-            this.ensureAllowance(chainId)
+    validateChainIdDesired(chainId: number) {
+        if (this.desiredChainId) {
+            const desiredChainId = this.parse(this.desiredChainId as string)
+            if (chainId !== desiredChainId) {
+                throw new ChainIdNotDesiredError(chainId, desiredChainId)
+            }
         }
+        return true
     }
 
-    ensureAllowance(chainId: number) {
-        const isAllowed = this.allowedChainIds?.some((id) => chainId === id)
-        if (!isAllowed) {
-            throw new ChainIdNotAllowedError(chainId, this.allowedChainIds || [])
+    validateChainIdAllowed(chainId: number) {
+        if (!!this.allowedChainIds && this.allowedChainIds.length > 0) {
+            const isAllowed = this.allowedChainIds?.some((id) => chainId === id)
+
+            if (!isAllowed) {
+                throw new ChainIdNotAllowedError(chainId, this.allowedChainIds || [])
+            }
         }
+        return true
     }
 
     parseDesiredChainId(desiredChainOrChainId: number | AddEthereumChainParameter | null) {

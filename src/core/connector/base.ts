@@ -1,20 +1,33 @@
-import { ConnectorStatus, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
+import EventEmitter from 'eventemitter3'
 
-export class ConnectorWrapperBase {
+export const events = {
+    CONNECT: 'connect',
+    DISCONNECT: 'disconnect',
+    CHAIN_CHANGED: 'chainChanged',
+    SWITCH_CHAIN: 'wallet_switchEthereumChain',
+    ADD_CHAIN: 'wallet_addEthereumChain',
+    ACCOUNTS_CHANGED: 'accountsChanged',
+    ERROR: 'error',
+}
+
+export class ConnectorWrapperBase extends EventEmitter {
     provider: IExternalProvider | undefined
     error: Error | undefined
-    status: ConnectorStatus
+    loading: boolean
 
     constructor() {
-        this.status = ConnectorStatus.DISCONNECTED
+        super()
+        this.loading = false
     }
 
-    protected removeAllListeners() {
+    protected _removeBaseListeners() {
         this.provider?.removeAllListeners()
     }
 
-    protected reportError(error: Error) {
+    protected _reportError(error: Error) {
         this.error = error
-        this.status = ConnectorStatus.ERROR
+        this.loading = false
+        this.emit(events.ERROR, error)
     }
 }

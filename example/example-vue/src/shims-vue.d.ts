@@ -4,3 +4,10 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+declare module 'eth-provider'
+
+declare module '*.svg' {
+    const content: any
+    export default content
+}

@@ -1,6 +1,6 @@
 import Logo from './logo.svg'
 import { AbstractConnector } from '../../types'
-import { createConnector } from '../../core/construction'
+import { createConnector } from '../../helpers/construction'
 
 export class MetaMaskConnector extends AbstractConnector {
     constructor() {

@@ -1,7 +1,7 @@
 import { Authereum } from 'authereum/dist'
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
-import { createConnector } from '../../core/construction'
+import { createConnector } from '../../helpers/construction'
 
 export type AuthereumOptions = {
     apiKey: string
