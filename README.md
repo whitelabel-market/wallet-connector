@@ -37,7 +37,7 @@ More to come soon!
 | Connector                                       | Docs                                                                                            |
 |-------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | [MetaMask](/src/connectors/MetaMask)            | [www.docs.metamask.io/guide/](https://docs.metamask.io/guide/)                                  |
-| [Coinbase Wallet](/src/connectors/WalletLink)   | [www.docs.cloud.coinbase.com/wallet-sdk/docs](https://docs.cloud.coinbase.com/wallet-sdk/docs)  |
+| [Coinbase Wallet](/src/connectors/CoinbaseWallet)   | [www.docs.cloud.coinbase.com/wallet-sdk/docs](https://docs.cloud.coinbase.com/wallet-sdk/docs)  |
 | [Wallet Connect](/src/connectors/WalletConnect) | [www.docs.walletconnect.com](https://docs.walletconnect.com/)                                   |
 
 ## Usage

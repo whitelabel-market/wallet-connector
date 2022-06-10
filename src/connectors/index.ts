@@ -4,14 +4,6 @@ import Fortmatic from './Fortmatic'
 import Frame from './Frame'
 import MetaMask from './MetaMask'
 import WalletConnect from './WalletConnect'
-import WalletLink from './WalletLink'
+import CoinbaseWallet from './CoinbaseWallet'
 
-export default {
-    Authereum,
-    BinanceChain,
-    Fortmatic,
-    Frame,
-    MetaMask,
-    WalletConnect,
-    WalletLink,
-}
+export default { Authereum, BinanceChain, Fortmatic, Frame, MetaMask, WalletConnect, CoinbaseWallet }

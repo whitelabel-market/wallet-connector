@@ -3,12 +3,12 @@ import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
 
-export type WalletLinkOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
+export type CoinbaseWalletOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
     rpcUrl: string
     chainId: number
 }
 
-export class WalletLinkConnector extends AbstractConnector<WalletLinkOptions> {
+export class WalletLinkConnector extends AbstractConnector<CoinbaseWalletOptions> {
     coinbaseWallet!: CoinbaseWalletSDK
 
     constructor() {

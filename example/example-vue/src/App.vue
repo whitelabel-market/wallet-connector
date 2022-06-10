@@ -12,16 +12,16 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, ref} from 'vue';
+import {defineComponent, ref} from 'vue';
 import ConnectorCard from "@/components/ConnectorCard.vue";
+import ConnectionCard from "@/components/ConnectionCard.vue";
 import {
   MetaMask,
   WalletConnect,
-  WalletLink,
+  CoinbaseWallet,
   ChainIdNotAllowedError,
   Connection, IConnectorWrapper
 } from "@whitelabel-solutions/wallet-connector"
-import ConnectionCard from "@/components/ConnectionCard.vue";
 
 export default defineComponent({
   name: 'App',
@@ -40,7 +40,7 @@ export default defineComponent({
     const connectors = [
       MetaMask(),
       WalletConnect({infuraId}),
-      WalletLink({
+      CoinbaseWallet({
         appName,
         rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
         chainId
