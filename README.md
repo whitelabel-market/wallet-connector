@@ -94,7 +94,7 @@ connection.loadFromCache() // use this to load the provider from local storage
 ```vue
 <template>
     <ul>
-        <li v-for="connector of connection.connector" :key="connector.id">
+        <li v-for="connector of connection.connectors" :key="connector.id">
             <button @click.prevent="connector.connect">
                 {{ connector.name }}
             </button>
@@ -123,6 +123,34 @@ type ConnectionOptions = {
 - If `allowedChainIds` option is set, the connector will validate if the user is connected to a matching chain.
 - If `desiredChainOrChainId` option is set, the connector will validate if the user is connected to the matching chain and instantiate a chain switch if not. If a chain switch fails because it's unknown to the provider and the option is passed as an object, the connector will try to add the chain to the wallet.
 
+## Connection properties
+```
+interface IConnection {
+    options: ConnectionOptions
+    connectors: Record<string, IConnectorWrapper>
+    activeConnectors: Record<string, IConnectorWrapper>
+    activeConnector: IConnectorWrapper | undefined
+    loadFromCache: () => Promise<IConnectorWrapper>
+}
+```
+
+## Connector properties
+```
+interface IConnectorWrapper {
+    id: string
+    name: string
+    logo: string
+    provider: IExternalProvider | undefined
+    accounts: string[] | undefined
+    chainId: number | undefined
+    selectedAccount: string | undefined
+    error: Error | undefined
+    loading: boolean
+    connected: boolean
+    connect: () => Promise<IConnectorWrapper>
+    disconnect: () => void
+}
+```
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
