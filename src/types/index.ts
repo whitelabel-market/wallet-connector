@@ -108,7 +108,7 @@ export type ConnectionOptions = {
      * Handles request for adding the chain parameters if it is unknown to the provider.
      * If desiredChainOrChainId isn't set, no chain switch will be initiated.
      */
-    desiredChainOrChainId?: number | AddEthereumChainParameter
+    desiredChainOrChainId?: number | AddEthereumChainParameter | null
     cache?: {
         /**
          * Indicates if a provider should be saved in the local storage.

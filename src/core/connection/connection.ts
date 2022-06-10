@@ -3,7 +3,7 @@ import LocalStorage from '../../helpers/localStorage'
 import { ConnectorFactory } from './factory'
 import { mergeDeep } from '../../helpers/mergeDeep'
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: ConnectionOptions = {
     allowedChainIds: null,
     desiredChainOrChainId: null,
     cache: {
