@@ -1,14 +1,15 @@
-import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk'
+// @ts-ignore
+import type { CoinbaseWalletSDK } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
-import { createConnector } from '../../helpers/construction'
+import { createConnector, peerImport } from '../../helpers/construction'
 
 export type CoinbaseWalletOptions = ConstructorParameters<typeof CoinbaseWalletSDK>[0] & {
     rpcUrl: string
     chainId: number
 }
 
-export class WalletLinkConnector extends AbstractConnector<CoinbaseWalletOptions> {
+export class CoinbaseWalletConnector extends AbstractConnector<CoinbaseWalletOptions> {
     coinbaseWallet!: CoinbaseWalletSDK
 
     constructor() {
@@ -16,6 +17,7 @@ export class WalletLinkConnector extends AbstractConnector<CoinbaseWalletOptions
     }
 
     async connectImpl() {
+        const CoinbaseWalletSDK = await peerImport('@coinbase/wallet-sdk', 'CoinbaseWalletSDK')
         this.coinbaseWallet = new CoinbaseWalletSDK(this.options)
         const provider = await this.coinbaseWallet.makeWeb3Provider(this.options.rpcUrl)
         return provider as unknown as IExternalProvider
@@ -26,4 +28,4 @@ export class WalletLinkConnector extends AbstractConnector<CoinbaseWalletOptions
     }
 }
 
-export default createConnector(new WalletLinkConnector())
+export default createConnector(new CoinbaseWalletConnector())

@@ -1,8 +1,6 @@
-import Fortmatic from 'fortmatic'
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
-import { createConnector } from '../../helpers/construction'
-import { BinanceChainConnector } from '../BinanceChain'
+import { createConnector, peerImport } from '../../helpers/construction'
 
 export type FortmaticOptions = {
     key: string
@@ -15,6 +13,7 @@ export class FortmaticConnector extends AbstractConnector<FortmaticOptions> {
     }
 
     async connectImpl() {
+        const Fortmatic = await peerImport('fortmatic')
         const fm = new Fortmatic(this.options.key, this.options.networkName)
         const provider = await fm.getProvider()
         // provider.fm = fm;
@@ -33,4 +32,4 @@ export class FortmaticConnector extends AbstractConnector<FortmaticOptions> {
     }
 }
 
-export default createConnector(new BinanceChainConnector())
+export default createConnector(new FortmaticConnector())

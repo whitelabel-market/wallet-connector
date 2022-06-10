@@ -1,20 +1,24 @@
-import WalletConnectProviderDefault from '@walletconnect/web3-provider'
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
-import { IWalletConnectProviderOptions } from '@walletconnect/types'
-import { createConnector } from '../../helpers/construction'
+// @ts-ignore
+import type { IWalletConnectProviderOptions } from '@walletconnect/types'
+// @ts-ignore
+import type WalletConnectProvider from '@walletconnect/web3-provider'
+
+import { createConnector, peerImport } from '../../helpers/construction'
 
 export type WalletConnectOptions = IWalletConnectProviderOptions
 
 export class WalletConnectConnector extends AbstractConnector<WalletConnectOptions> {
-    walletConnect!: WalletConnectProviderDefault
+    walletConnect!: WalletConnectProvider
 
     constructor() {
         super('WalletConnect', Logo)
     }
 
     async connectImpl() {
-        this.walletConnect = new WalletConnectProviderDefault(this.options)
+        const WalletConnectWeb3Provider = peerImport('@walletconnect/web3-provider')
+        this.walletConnect = new WalletConnectWeb3Provider(this.options)
         await this.walletConnect.enable()
         return this.walletConnect as unknown as IExternalProvider
     }

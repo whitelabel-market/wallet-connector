@@ -1,5 +1,15 @@
 import { AbstractConnector, IExternalProvider } from '../types'
 
+export function peerImport(name: string, prop?: string) {
+    const pkg = import(name) as any
+
+    if (prop) {
+        return pkg.default().then(({ [prop]: value }: any) => value)
+    } else {
+        return pkg.default
+    }
+}
+
 export function createInjectedProvider(from: IExternalProvider, selector: keyof IExternalProvider) {
     // handle edge case when multiple injected providers are installed
     if (from.providers?.length) {
