@@ -21,6 +21,7 @@ const externals = [
     'authereum/dist',
     'eth-provider',
     'fortmatic',
+    '@metamask/detect-provider',
 ]
 
 const esbuildMinifer = (options: ESBuildOptions) => {

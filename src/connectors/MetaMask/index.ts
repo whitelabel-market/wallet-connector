@@ -1,36 +1,34 @@
 import Logo from './logo.svg'
-import { AbstractConnector } from '../../types'
+import { AbstractConnector, IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
+import detectEthereumProvider from '@metamask/detect-provider'
 
 export class MetaMaskConnector extends AbstractConnector {
+    static DEEP_LINK_BASE = 'https://metamask.app.link/dapp/'
+
     constructor() {
         super('MetaMask', Logo)
     }
 
     async connectImpl() {
-        let provider = null
-        if (typeof window.ethereum !== 'undefined') {
-            provider = (window as any).ethereum
-            // if (this.id === 'metamask') provider = provider.providers.find((provider: any) => provider.isMetaMask)
-            // if (this.id === 'coinbasewallet')
-            //     provider = provider.providers.find((provider: any) => provider.isCoinbaseWallet)
-        } else if ((window as any)?.web3) {
-            provider = (window as any).web3.currentProvider
-        } else {
-            const metaMaskDeeplink = 'https://metamask.app.link/dapp/'
-            const { host, pathname } = window.location
-            const url = `${metaMaskDeeplink}${host + pathname}`
-            window.open(url, '_blank')
-
-            throw new Error('No Web3 Provider found')
+        const provider = (await detectEthereumProvider()) as IExternalProvider
+        if (!provider) {
+            MetaMaskConnector._redirect()
+            throw new Error('No Metamask provider found')
         }
-        await provider?.request({ method: 'eth_requestAccounts' })
+        // eth_requestAccounts already done in connector wrapper
+        // await provider.request({ method: 'eth_requestAccounts' })
         return provider
     }
 
     async disconnectImpl() {
-        // ToDo
         return null
+    }
+
+    private static _redirect() {
+        const target = '_blank'
+        const { host, pathname } = window.location
+        window.open(`${MetaMaskConnector.DEEP_LINK_BASE}${host + pathname}`, target)
     }
 }
 
