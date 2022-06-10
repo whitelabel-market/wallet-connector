@@ -77,6 +77,7 @@ export interface IExternalProvider {
     networkVersion: string
     selectedAddress: string
     connected?: boolean
+    providers?: IExternalProvider[]
 
     on<K extends EventKeys>(event: K, eventHandler: EventHandler<K>): void
     enable(): Promise<string[]>
