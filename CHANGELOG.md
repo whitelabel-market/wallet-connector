@@ -1,3 +1,16 @@
+# [2.1.0](https://github.com/whitelabel-market/wallet-connector/compare/v2.0.0...v2.1.0) (2022-06-10)
+
+
+### Bug Fixes
+
+* handle edge case when multiple injected providers are installed ([fd0e5ba](https://github.com/whitelabel-market/wallet-connector/commit/fd0e5ba30181c142930c265417b97ee3b3c1f7fb))
+* rename coinbase wallet ([95b5be9](https://github.com/whitelabel-market/wallet-connector/commit/95b5be9c1f58f6c4dc54cd91b72d791bf2a29c9f))
+
+
+### Features
+
+* use peer dependencies ([ec15121](https://github.com/whitelabel-market/wallet-connector/commit/ec1512190864ac2b8d683f57e97457d2e7d5ac73))
+
 # [2.0.0](https://github.com/whitelabel-market/wallet-connector/compare/v1.0.6...v2.0.0) (2022-06-09)
 
 
