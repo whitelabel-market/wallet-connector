@@ -1,6 +1,6 @@
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
-import { createConnector, createInjectedProvider, peerImport } from '../../helpers/construction'
+import { createConnector, createInjectedProvider } from '../../helpers/construction'
 
 export class MetaMaskConnector extends AbstractConnector {
     static DEEP_LINK_BASE = 'https://metamask.app.link/dapp/'
@@ -10,8 +10,7 @@ export class MetaMaskConnector extends AbstractConnector {
     }
 
     async connectImpl() {
-        const detectEthereumProvider = await peerImport('@metamask/detect-provider')
-        console.log('detectProvider', detectEthereumProvider)
+        const { default: detectEthereumProvider } = await import('@metamask/detect-provider')
         let provider = (await detectEthereumProvider()) as IExternalProvider
         if (!provider) {
             MetaMaskConnector._redirect()

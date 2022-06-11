@@ -1,6 +1,6 @@
 import Logo from './logo.svg'
 import { AbstractConnector, IExternalProvider } from '../../types'
-import { createConnector, peerImport } from '../../helpers/construction'
+import { createConnector } from '../../helpers/construction'
 
 export type AuthereumOptions = {
     apiKey: string
@@ -20,7 +20,7 @@ class AuthereumConnector extends AbstractConnector<AuthereumOptions> {
     }
 
     async connectImpl() {
-        const Authereum = await peerImport('authereum/dist', 'Authereum')
+        const { Authereum } = await import('authereum/dist')
         const authereum = new Authereum(this.options)
         const provider = authereum.getProvider()
         provider.authereum = authereum
