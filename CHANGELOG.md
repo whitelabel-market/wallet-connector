@@ -1,3 +1,10 @@
+## [2.1.4](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.3...v2.1.4) (2022-06-11)
+
+
+### Bug Fixes
+
+* remove dist from git assets ([5fb8bfc](https://github.com/whitelabel-market/wallet-connector/commit/5fb8bfc73b8fe470358773470c66a01840e2b505))
+
 ## [2.1.3](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.2...v2.1.3) (2022-06-11)
 
 
