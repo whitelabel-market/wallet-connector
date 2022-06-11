@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.1...v2.1.2) (2022-06-11)
+
+
+### Bug Fixes
+
+* peer dependencies import statement ([c999e57](https://github.com/whitelabel-market/wallet-connector/commit/c999e57c89c1721e8280a8cb4585e6f418da8ee2))
+
 ## [2.1.1](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.0...v2.1.1) (2022-06-11)
 
 

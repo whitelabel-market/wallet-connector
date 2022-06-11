@@ -16,7 +16,7 @@
         "type": "git",
         "url": "https://github.com/whitelabel-market/wallet-connector.git"
     },
-    "version": "2.1.1",
+    "version": "2.1.2",
     "main": "./index.cjs",
     "module": "./index.mjs",
     "types": "./index.d.ts",
@@ -122,7 +122,9 @@
     },
     "publishConfig": {
         "access": "public",
-        "branches": ["main"],
+        "branches": [
+            "main"
+        ],
         "registry": "https://registry.npmjs.org"
     },
     "simple-git-hooks": {
