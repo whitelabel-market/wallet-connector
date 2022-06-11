@@ -17,7 +17,7 @@ export class WalletConnectConnector extends AbstractConnector<WalletConnectOptio
     }
 
     async connectImpl() {
-        const WalletConnectWeb3Provider = peerImport('@walletconnect/web3-provider')
+        const WalletConnectWeb3Provider = await peerImport('@walletconnect/web3-provider')
         this.walletConnect = new WalletConnectWeb3Provider(this.options)
         await this.walletConnect.enable()
         return this.walletConnect as unknown as IExternalProvider
