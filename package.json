@@ -46,12 +46,12 @@
         "eventemitter3": "^4.0.7"
     },
     "peerDependencies": {
-        "@coinbase/wallet-sdk": "~3.0",
-        "@metamask/detect-provider": "~1.0",
-        "@walletconnect/web3-provider": "~1.0",
-        "authereum": "~0.1",
-        "eth-provider": "~0.1",
-        "fortmatic": "~2.0"
+        "@coinbase/wallet-sdk": "^3.x",
+        "@metamask/detect-provider": "^1.x",
+        "@walletconnect/web3-provider": "^1.x",
+        "authereum": "^0.x",
+        "eth-provider": "^0.x",
+        "fortmatic": "^2.x"
     },
     "peerDependenciesMeta": {
         "@coinbase/wallet-sdk": {

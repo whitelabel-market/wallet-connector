@@ -15,13 +15,7 @@
 import {defineComponent, ref} from 'vue';
 import ConnectorCard from "@/components/ConnectorCard.vue";
 import ConnectionCard from "@/components/ConnectionCard.vue";
-import {
-  MetaMask,
-  WalletConnect,
-  CoinbaseWallet,
-  ChainIdNotAllowedError,
-  Connection, IConnectorWrapper
-} from "@whitelabel-solutions/wallet-connector"
+import {CoinbaseWallet, Connection, IConnectorWrapper, MetaMask, WalletConnect } from '@whitelabel-solutions/wallet-connector';
 
 export default defineComponent({
   name: 'App',

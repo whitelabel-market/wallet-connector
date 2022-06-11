@@ -1,13 +1,9 @@
 import { AbstractConnector, IExternalProvider } from '../types'
 
-export function peerImport(name: string, prop?: string) {
-    const pkg = import(name) as any
-
-    if (prop) {
-        return pkg.default().then(({ [prop]: value }: any) => value)
-    } else {
-        return pkg.default
-    }
+export async function peerImport(name: string, prop?: string) {
+    const pkg = (await import(name)) as any
+    console.log('got pkg', pkg)
+    return (prop ? await pkg.default().then(({ [prop]: v }: any) => v) : pkg.default) as any
 }
 
 export function createInjectedProvider(from: IExternalProvider, selector: keyof IExternalProvider) {

@@ -17,8 +17,8 @@ export class CoinbaseWalletConnector extends AbstractConnector<CoinbaseWalletOpt
     }
 
     async connectImpl() {
-        const CoinbaseWalletSDK = await peerImport('@coinbase/wallet-sdk', 'CoinbaseWalletSDK')
-        this.coinbaseWallet = new CoinbaseWalletSDK(this.options)
+        const CoinbaseWallet = await peerImport('@coinbase/wallet-sdk', 'CoinbaseWalletSDK')
+        this.coinbaseWallet = new CoinbaseWallet(this.options)
         const provider = await this.coinbaseWallet.makeWeb3Provider(this.options.rpcUrl)
         return provider as unknown as IExternalProvider
     }

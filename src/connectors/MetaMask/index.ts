@@ -10,8 +10,9 @@ export class MetaMaskConnector extends AbstractConnector {
     }
 
     async connectImpl() {
-        const detectProvider = await peerImport('@metamask/detect-provider')
-        let provider = (await detectProvider()) as IExternalProvider
+        const detectEthereumProvider = await peerImport('@metamask/detect-provider')
+        console.log('detectProvider', detectEthereumProvider)
+        let provider = (await detectEthereumProvider()) as IExternalProvider
         if (!provider) {
             MetaMaskConnector._redirect()
             throw new Error('No Metamask provider found')
