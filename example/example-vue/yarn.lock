@@ -1941,10 +1941,10 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
-"@whitelabel-solutions/wallet-connector@^2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@whitelabel-solutions/wallet-connector/-/wallet-connector-2.1.2.tgz#61de009e1538085f8af4359bb1d2b595415ced85"
-  integrity sha512-by1AuqliyU+sN/zb0BzSpBAO9NO2vc5cexYIy/fgN1+9C6f65whc1r2+71GVeIhv+WtmPnJbmFJu6583Iqoxqw==
+"@whitelabel-solutions/wallet-connector@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@whitelabel-solutions/wallet-connector/-/wallet-connector-2.1.3.tgz#3620c3ab1a82f58dad798a500cf7190bf52f10d7"
+  integrity sha512-3Q3u+ZWmLf7J+DDiYiVRIC6VjLhNvYmjLE5OIfPrlyIKJWUT95Zkg2Zs8OKTGPPEsYOvLUu/ydd6TjrbpvgCtQ==
   dependencies:
     eventemitter3 "^4.0.7"
 
