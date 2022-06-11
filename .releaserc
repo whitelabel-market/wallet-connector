@@ -2,6 +2,7 @@
     "branches": [
         "main"
     ],
+    "pkgRoot": "dist",
     "plugins": [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
@@ -13,7 +14,8 @@
                 "assets": [
                     "package.json",
                     "yarn.lock",
-                    "CHANGELOG.md"
+                    "CHANGELOG.md",
+                    "dist/**"
                 ],
                 "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
             }
