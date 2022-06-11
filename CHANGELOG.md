@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.2...v2.1.3) (2022-06-11)
+
+
+### Bug Fixes
+
+* release dist ([607f512](https://github.com/whitelabel-market/wallet-connector/commit/607f5123da976c679025c5ffa89ebe5c06814076))
+
 ## [2.1.2](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.1...v2.1.2) (2022-06-11)
 
 
