@@ -1,3 +1,11 @@
+## [2.1.1](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.0...v2.1.1) (2022-06-11)
+
+
+### Bug Fixes
+
+* dependencies version ([0663a6a](https://github.com/whitelabel-market/wallet-connector/commit/0663a6ae28bbb36d6c014f1b831becdec28a0f1e))
+* walletconnect import as promise ([028de1c](https://github.com/whitelabel-market/wallet-connector/commit/028de1c0b28d42fc37221a634b098d1194d817a5))
+
 # [2.1.0](https://github.com/whitelabel-market/wallet-connector/compare/v2.0.0...v2.1.0) (2022-06-10)
 
 
