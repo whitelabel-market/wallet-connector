@@ -122,6 +122,7 @@
     },
     "publishConfig": {
         "access": "public",
+        "branches": ["main"],
         "registry": "https://registry.npmjs.org"
     },
     "simple-git-hooks": {
