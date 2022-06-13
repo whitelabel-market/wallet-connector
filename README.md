@@ -27,6 +27,7 @@
 - Switch Chain
 - Add Chain
 - Store the current provider in local storage to facilitate sign-in for returning users 
+- Usage of peer dependencies gives the opportunity to use the latest version of a provider package
 
 > The library is framework-agnostic, meaning it is developed entirely in Typescript without any reliance on frameworks like React or Vue. However, it may of course be used in React or Vue.
 
@@ -52,25 +53,44 @@ npm install --save @whitelabel-solutions/wallet-connector
 yarn add @whitelabel-solutions/wallet-connector
 ```
 
-2. Setup Connectors
+2. Install only the necessary provider dependencies
+```bash
+# E.g. for MetaMask:
+npm install --save @metamask/detect-provider
+
+# OR
+
+yarn add @metamask/detect-provider
+
+# For all your providers. 
+# Documentation on which dependencies to install for which provider will soon be added. In the meantime, please refer to the specific provider documentation.
+```
+
+3. Setup Connectors
 ```js
 import {
     MetaMask,
     WalletConnect,
     WalletLink,
 } from "@whitelabel-solutions/wallet-connector"
+import detectProvider from "@metamask/detect-provider"
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import {CoinbaseWalletSDK} from "@coinbase/wallet-sdk";
 
 const appName = "appName"
 const infuraId = "infuraId"
 const chainId = 1
 
 const connectors = [
-    MetaMask(),
-    WalletConnect({infuraId}),
-    WalletLink({
-        appName,
-        rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
-        chainId
+    MetaMask({detectProvider}),
+    WalletConnect({WalletConnectProvider, options: {infuraId}}),
+    CoinbaseWallet({
+        CoinbaseWalletSDK,
+        options: {
+            appName,
+            rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
+            chainId
+        },
     })
 ]
 ```
