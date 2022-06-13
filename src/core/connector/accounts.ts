@@ -18,16 +18,7 @@ export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
     }
 
     protected async _getAccounts() {
-        try {
-            return this._onAccountsChanged(await this._getRequestAccounts())
-        } catch (error: any) {
-            const accounts = await this._getEthAccounts()
-            if (accounts?.length) {
-                return this._onAccountsChanged(accounts)
-            } else {
-                throw error
-            }
-        }
+        return this._onAccountsChanged(await this._getEthAccounts())
     }
 
     protected _onAccountsChanged(accounts: string[]) {
@@ -37,10 +28,6 @@ export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
         this.accounts = accounts
         this.emit(events.ACCOUNTS_CHANGED, this.accounts)
         return this.accounts
-    }
-
-    private _getRequestAccounts() {
-        return this.provider?.request({ method: 'eth_requestAccounts' }) as Promise<string[]>
     }
 
     private _getEthAccounts() {

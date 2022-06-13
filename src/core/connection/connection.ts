@@ -18,7 +18,7 @@ export class Connection extends ConnectorFactory implements IConnection {
     options: RequiredConnectionOptions
     _storage: LocalStorage
 
-    constructor(options: ConnectionOptions, connectors: IConnector[]) {
+    constructor(options: ConnectionOptions, connectors: IConnector<any>[]) {
         super()
         this.options = initOptions(options)
         this._storage = new LocalStorage(this.options.cache.key)

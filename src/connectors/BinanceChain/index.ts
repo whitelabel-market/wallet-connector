@@ -1,10 +1,15 @@
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
 
 export class BinanceChainConnector extends AbstractConnector {
     constructor() {
         super('Binance Chain', Logo)
+    }
+
+    initImpl() {
+        return this
     }
 
     async connectImpl() {

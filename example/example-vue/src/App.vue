@@ -15,7 +15,16 @@
 import {defineComponent, ref} from 'vue';
 import ConnectorCard from "@/components/ConnectorCard.vue";
 import ConnectionCard from "@/components/ConnectionCard.vue";
-import {CoinbaseWallet, Connection, IConnectorWrapper, MetaMask, WalletConnect } from '@whitelabel-solutions/wallet-connector';
+import {
+  CoinbaseWallet,
+  Connection,
+  IConnectorWrapper,
+  MetaMask,
+  WalletConnect
+} from '@whitelabel-solutions/wallet-connector';
+import detectProvider from "@metamask/detect-provider"
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import {CoinbaseWalletSDK} from "@coinbase/wallet-sdk";
 
 export default defineComponent({
   name: 'App',
@@ -31,13 +40,17 @@ export default defineComponent({
         enabled: true
       }
     }
+
     const connectors = [
-      MetaMask(),
-      WalletConnect({infuraId}),
+      MetaMask({detectProvider}),
+      WalletConnect({WalletConnectProvider, options: {infuraId}}),
       CoinbaseWallet({
-        appName,
-        rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
-        chainId
+        CoinbaseWalletSDK,
+        options: {
+          appName,
+          rpcUrl: "https://mainnet.infura.io/v3/" + infuraId,
+          chainId
+        },
       })
     ]
 

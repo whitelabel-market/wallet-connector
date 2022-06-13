@@ -1,6 +1,8 @@
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
+import type AuthereumType from 'authereum/dist'
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
 
 export type AuthereumOptions = {
     apiKey: string
@@ -14,24 +16,35 @@ export type AuthereumOptions = {
     disableGoogleAnalytics?: boolean
 }
 
-class AuthereumConnector extends AbstractConnector<AuthereumOptions> {
+export type AuthereumInitArgs = {
+    options: AuthereumOptions
+    Authereum: typeof AuthereumType
+}
+
+class AuthereumConnector extends AbstractConnector<AuthereumInitArgs> {
+    options!: AuthereumInitArgs['options']
+    authereum!: AuthereumType
+
     constructor() {
         super('Authereum', Logo)
     }
 
+    initImpl({ options, Authereum }: AuthereumInitArgs) {
+        this.options = options
+        this.authereum = new Authereum(this.options)
+        return this
+    }
+
     async connectImpl() {
-        const { Authereum } = await import('authereum/dist')
-        const authereum = new Authereum(this.options)
-        const provider = authereum.getProvider()
-        provider.authereum = authereum
+        const provider = this.authereum.getProvider()
+        provider.authereum = this.authereum
         await provider.enable()
         return provider as unknown as IExternalProvider
     }
 
     async disconnectImpl() {
-        // ToDo
-        return null
+        return await this.authereum.logout()
     }
 }
 
-export default createConnector<AuthereumOptions>(new AuthereumConnector())
+export default createConnector<AuthereumInitArgs>(new AuthereumConnector())

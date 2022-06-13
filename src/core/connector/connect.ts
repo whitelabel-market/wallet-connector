@@ -12,10 +12,12 @@ export class ConnectorWrapperConnect extends ConnectorWrapperWithAccounts {
 
     protected async _activate() {
         this.provider = await this._impl.connectImpl()
-        this._storage?.set(this.id)
         await Promise.all([this._getAccounts(), this._getChainId()])
+        console.log('success executing _getAccounts', this)
         this._addChainChangedListener()
         this._addAccountsChangedListener()
+        console.log('set storage', this.id)
+        this._storage?.set(this.id)
     }
 
     protected async _deactivate() {

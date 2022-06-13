@@ -15,7 +15,7 @@ export class ConnectorFactory extends EventEmitter implements IConnectorFactory 
         this.connectors = {}
     }
 
-    _init(connectors: IConnector[], connection: IConnection) {
+    _init(connectors: IConnector<any>[], connection: IConnection) {
         connectors.forEach((impl) => {
             const connector = new ConnectorWrapper(impl, connection)
             Object.values(events).forEach((event) =>

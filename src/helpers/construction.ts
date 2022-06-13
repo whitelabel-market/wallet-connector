@@ -1,10 +1,5 @@
-import { AbstractConnector, IExternalProvider } from '../types'
-
-export async function peerImport(name: string, prop?: string) {
-    const pkg = (await import(name)) as any
-    console.log('got pkg', pkg)
-    return (prop ? await pkg.default().then(({ [prop]: v }: any) => v) : pkg.default) as any
-}
+import { IExternalProvider } from '../types'
+import { AbstractConnector } from '../core/connectorImpl/abstract'
 
 export function createInjectedProvider(from: IExternalProvider, selector: keyof IExternalProvider) {
     // handle edge case when multiple injected providers are installed
@@ -15,5 +10,5 @@ export function createInjectedProvider(from: IExternalProvider, selector: keyof 
 }
 
 export function createConnector<T = void>(impl: AbstractConnector<T>) {
-    return (options?: T) => impl.init(options || ({} as T))
+    return (args: T) => impl.initImpl(args)
 }

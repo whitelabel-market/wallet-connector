@@ -1,4 +1,3 @@
-import generateId from '../helpers/id'
 import LocalStorage from '../helpers/localStorage'
 
 export type DeepRequired<T> = { [K in keyof T]: DeepRequired<T[K]> } & Required<T>
@@ -150,7 +149,14 @@ export interface IConnectorInfo {
 /**
  * wallet-connector connector implementation
  */
-export interface IConnector extends IConnectorInfo {
+export interface IConnector<T = void> extends IConnectorInfo {
+    /**
+     * The init-implementation of a connector
+     * @param args: Generic arguments needed for initializing the connector
+     * @internal
+     */
+    initImpl(args: T): void
+
     /**
      * The connect-implementation of a connector
      * @returns {(Promise<IExternalProvider>)} The provider used for establishing a connection
@@ -164,13 +170,6 @@ export interface IConnector extends IConnectorInfo {
      */
     disconnectImpl(): void
 }
-/**
- * This is the description of the interface
- *
- * @interface EditDialogField
- * @member {string} label is used for whatever reason
- * @field {string} prop is used for other reason
- */
 
 /**
  * wallet-connector wrapper for a connector. Holds and manages a specific connector implementation.
@@ -275,21 +274,4 @@ export interface IConnection extends IConnectorFactory {
      * @internal
      */
     _storage: LocalStorage
-}
-
-export abstract class AbstractConnector<T = void> implements IConnector {
-    id: string
-    options!: T
-
-    protected constructor(public name: string, public logo: string) {
-        this.id = generateId(this.name)
-    }
-
-    init(options: T): IConnector {
-        this.options = options
-        return this
-    }
-
-    abstract connectImpl(): Promise<IExternalProvider>
-    abstract disconnectImpl(): void
 }

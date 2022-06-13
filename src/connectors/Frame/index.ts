@@ -1,15 +1,27 @@
 import FrameLogo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
+import type ethProviderType from 'eth-provider'
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
 
-export class FrameConnector extends AbstractConnector {
+export type FrameInitArgs = {
+    ethProvider: typeof ethProviderType
+}
+
+export class FrameConnector extends AbstractConnector<FrameInitArgs> {
+    ethProvider: FrameInitArgs['ethProvider']
+
     constructor() {
         super('Frame', FrameLogo)
     }
 
+    initImpl({ ethProvider }: FrameInitArgs) {
+        this.ethProvider = ethProvider
+        return this
+    }
+
     async connectImpl() {
-        const { default: ethProvider } = await import('eth-provider')
-        return ethProvider('frame') as unknown as IExternalProvider
+        return this.ethProvider('frame') as unknown as IExternalProvider
     }
 
     async disconnectImpl() {
@@ -18,4 +30,4 @@ export class FrameConnector extends AbstractConnector {
     }
 }
 
-export default createConnector(new FrameConnector())
+export default createConnector<FrameInitArgs>(new FrameConnector())

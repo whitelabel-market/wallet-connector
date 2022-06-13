@@ -1,31 +1,40 @@
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
-// @ts-ignore
+import { IExternalProvider } from '../../types'
 import type { IWalletConnectProviderOptions } from '@walletconnect/types'
-// @ts-ignore
-import type WalletConnectProvider from '@walletconnect/web3-provider'
-
+import type WalletConnectProviderType from '@walletconnect/web3-provider'
 import { createConnector } from '../../helpers/construction'
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
 
-export type WalletConnectOptions = IWalletConnectProviderOptions
+export type WalletConnectInitArgs = {
+    options: IWalletConnectProviderOptions
+    WalletConnectProvider: typeof WalletConnectProviderType
+}
 
-export class WalletConnectConnector extends AbstractConnector<WalletConnectOptions> {
-    walletConnect!: WalletConnectProvider
+export class WalletConnectConnector extends AbstractConnector<WalletConnectInitArgs> {
+    options!: WalletConnectInitArgs['options']
+    WalletConnectProvider!: WalletConnectInitArgs['WalletConnectProvider']
+    walletConnect!: WalletConnectProviderType
 
     constructor() {
         super('WalletConnect', Logo)
     }
 
+    initImpl({ options, WalletConnectProvider }: WalletConnectInitArgs) {
+        this.options = options
+        // store the class as we need to reinstantiate walletConnect provider on every call to connectImpl()
+        this.WalletConnectProvider = WalletConnectProvider
+        return this
+    }
+
     async connectImpl() {
-        const { default: WalletConnectWeb3Provider } = await import('@walletconnect/web3-provider')
-        this.walletConnect = new WalletConnectWeb3Provider(this.options)
+        this.walletConnect = new this.WalletConnectProvider(this.options)
         await this.walletConnect.enable()
         return this.walletConnect as unknown as IExternalProvider
     }
 
-    disconnectImpl() {
-        return this.walletConnect.disconnect()
+    async disconnectImpl() {
+        return await this.walletConnect.disconnect()
     }
 }
 
-export default createConnector(new WalletConnectConnector())
+export default createConnector<WalletConnectInitArgs>(new WalletConnectConnector())

@@ -1,24 +1,37 @@
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
+import type FortmaticType from 'fortmatic'
 
-export type FortmaticOptions = {
-    key: string
-    networkName?: string
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
+
+export type FortmaticInitArgs = {
+    options: {
+        key: string
+        networkName?: string
+    }
+    Fortmatic: typeof FortmaticType
 }
 
-export class FortmaticConnector extends AbstractConnector<FortmaticOptions> {
+export class FortmaticConnector extends AbstractConnector<FortmaticInitArgs> {
+    options!: FortmaticInitArgs['options']
+    fm!: any
+
     constructor() {
         super('Fortmatic', Logo)
     }
 
+    initImpl({ options, Fortmatic }: FortmaticInitArgs) {
+        this.options = options
+        this.fm = new Fortmatic(this.options.key, this.options.networkName)
+        return this
+    }
+
     async connectImpl() {
-        const { default: Fortmatic } = await import('fortmatic')
-        const fm = new Fortmatic(this.options.key, this.options.networkName)
-        const provider = await fm.getProvider()
+        const provider = await this.fm.getProvider()
         // provider.fm = fm;
-        await fm.user.login()
-        const isLoggedIn = await fm.user.isLoggedIn()
+        await this.fm.user.login()
+        const isLoggedIn = await this.fm.user.isLoggedIn()
         if (isLoggedIn) {
             return provider as unknown as IExternalProvider
         } else {
@@ -32,4 +45,4 @@ export class FortmaticConnector extends AbstractConnector<FortmaticOptions> {
     }
 }
 
-export default createConnector(new FortmaticConnector())
+export default createConnector<FortmaticInitArgs>(new FortmaticConnector())

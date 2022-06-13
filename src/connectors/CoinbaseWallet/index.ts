@@ -1,31 +1,42 @@
-// @ts-ignore
 import type { CoinbaseWalletSDK as CoinbaseWalletSDKType } from '@coinbase/wallet-sdk'
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
 
-export type CoinbaseWalletOptions = ConstructorParameters<typeof CoinbaseWalletSDKType>[0] & {
-    rpcUrl: string
-    chainId: number
+export type CoinbaseWalletInitArgs = {
+    options: ConstructorParameters<typeof CoinbaseWalletSDKType>[0] & {
+        rpcUrl: string
+        chainId: number
+    }
+    CoinbaseWalletSDK: typeof CoinbaseWalletSDKType
 }
 
-export class CoinbaseWalletConnector extends AbstractConnector<CoinbaseWalletOptions> {
-    coinbaseWallet!: CoinbaseWalletSDKType
+export class CoinbaseWalletConnector extends AbstractConnector<CoinbaseWalletInitArgs> {
+    options!: CoinbaseWalletInitArgs['options']
+    sdk!: CoinbaseWalletSDKType
+    coinbaseWalletProvider!: CoinbaseWalletProvider
 
     constructor() {
         super('Coinbase Wallet', Logo)
     }
 
+    initImpl({ options, CoinbaseWalletSDK }: CoinbaseWalletInitArgs) {
+        this.options = options
+        this.sdk = new CoinbaseWalletSDK(this.options)
+        this.coinbaseWalletProvider = this.sdk.makeWeb3Provider(this.options.rpcUrl)
+        return this
+    }
+
     async connectImpl() {
-        const { CoinbaseWalletSDK } = await import('@coinbase/wallet-sdk')
-        this.coinbaseWallet = new CoinbaseWalletSDK(this.options)
-        const provider = await this.coinbaseWallet.makeWeb3Provider(this.options.rpcUrl)
-        return provider as unknown as IExternalProvider
+        await this.coinbaseWalletProvider?.request({ method: 'eth_requestAccounts' })
+        return this.coinbaseWalletProvider as unknown as IExternalProvider
     }
 
     async disconnectImpl() {
-        return this.coinbaseWallet.disconnect()
+        return this.sdk.disconnect()
     }
 }
 
-export default createConnector(new CoinbaseWalletConnector())
+export default createConnector<CoinbaseWalletInitArgs>(new CoinbaseWalletConnector())

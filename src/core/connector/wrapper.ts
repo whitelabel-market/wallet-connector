@@ -21,6 +21,7 @@ export class ConnectorWrapper extends ConnectorWrapperConnect implements IConnec
             this.emit(events.CONNECT, this)
             this.loading = false
         } catch (error: any) {
+            console.log('received error', error)
             this._reportError(error)
             this._connection._remove(this)
         }

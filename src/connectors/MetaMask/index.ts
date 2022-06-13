@@ -1,17 +1,32 @@
 import Logo from './logo.svg'
-import { AbstractConnector, IExternalProvider } from '../../types'
+import { IExternalProvider } from '../../types'
 import { createConnector, createInjectedProvider } from '../../helpers/construction'
+import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import type detectProviderType from '@metamask/detect-provider'
 
-export class MetaMaskConnector extends AbstractConnector {
+export type MetaMaskInitArgs = {
+    options?: Parameters<typeof detectProviderType>[0]
+    detectProvider: typeof detectProviderType
+}
+
+export class MetaMaskConnector extends AbstractConnector<MetaMaskInitArgs> {
     static DEEP_LINK_BASE = 'https://metamask.app.link/dapp/'
+
+    options!: MetaMaskInitArgs['options']
+    detectProvider!: MetaMaskInitArgs['detectProvider']
 
     constructor() {
         super('MetaMask', Logo)
     }
 
+    initImpl({ options, detectProvider }: MetaMaskInitArgs) {
+        this.options = options
+        this.detectProvider = detectProvider
+        return this
+    }
+
     async connectImpl() {
-        const { default: detectEthereumProvider } = await import('@metamask/detect-provider')
-        let provider = (await detectEthereumProvider()) as IExternalProvider
+        let provider = (await this.detectProvider(this.options)) as unknown as IExternalProvider
         if (!provider) {
             MetaMaskConnector._redirect()
             throw new Error('No Metamask provider found')
@@ -19,9 +34,8 @@ export class MetaMaskConnector extends AbstractConnector {
 
         // handle edge case when multiple injected providers are installed
         provider = createInjectedProvider(provider, 'isMetaMask')
+        await provider?.request({ method: 'eth_requestAccounts' })
 
-        // eth_requestAccounts already done in connector wrapper
-        // await provider.request({ method: 'eth_requestAccounts' })
         return provider
     }
 
@@ -36,4 +50,4 @@ export class MetaMaskConnector extends AbstractConnector {
     }
 }
 
-export default createConnector(new MetaMaskConnector())
+export default createConnector<MetaMaskInitArgs>(new MetaMaskConnector())
