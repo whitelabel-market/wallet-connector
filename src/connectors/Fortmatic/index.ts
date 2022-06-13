@@ -1,9 +1,8 @@
 import Logo from './logo.svg'
-import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
 import type FortmaticType from 'fortmatic'
 
-import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import { AbstractConnector } from '../../core/connectorImpl/abstract-connector'
 
 export type FortmaticInitArgs = {
     options: {
@@ -28,20 +27,21 @@ export class FortmaticConnector extends AbstractConnector<FortmaticInitArgs> {
     }
 
     async connectImpl() {
-        const provider = await this.fm.getProvider()
+        this.provider = await this.fm.getProvider()
         // provider.fm = fm;
         await this.fm.user.login()
         const isLoggedIn = await this.fm.user.isLoggedIn()
         if (isLoggedIn) {
-            return provider as unknown as IExternalProvider
+            const [accounts, chainId] = await Promise.all([this._getEthAccounts(), this._getEthChainId()])
+            return { accounts, chainId }
         } else {
             throw new Error('Failed to login to Fortmatic')
         }
     }
 
     async disconnectImpl() {
-        // ToDo
-        return null
+        await this.fm.user.logout()
+        this.provider = undefined
     }
 }
 

@@ -1,4 +1,3 @@
-import { IExternalProvider } from '../../types'
 import EventEmitter from 'eventemitter3'
 
 export const events = {
@@ -12,17 +11,12 @@ export const events = {
 }
 
 export class ConnectorWrapperBase extends EventEmitter {
-    provider: IExternalProvider | undefined
     error: Error | undefined
     loading: boolean
 
     constructor() {
         super()
         this.loading = false
-    }
-
-    protected _removeBaseListeners() {
-        this.provider?.removeAllListeners()
     }
 
     protected _reportError(error: Error) {

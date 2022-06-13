@@ -61,7 +61,6 @@ export default defineComponent({
     })
 
     connection.value.on("connect", (to: IConnectorWrapper, connector: IConnectorWrapper) => {
-      console.log("Connect - to is a connector", to.chainId, connector)
     })
 
 

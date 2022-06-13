@@ -1,9 +1,9 @@
 import Logo from './logo.svg'
-import { IExternalProvider } from '../../types'
 import type { IWalletConnectProviderOptions } from '@walletconnect/types'
 import type WalletConnectProviderType from '@walletconnect/web3-provider'
 import { createConnector } from '../../helpers/construction'
-import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import { AbstractConnector } from '../../core/connectorImpl/abstract-connector'
+import { IExternalProvider } from '../../types'
 
 export type WalletConnectInitArgs = {
     options: IWalletConnectProviderOptions
@@ -13,7 +13,6 @@ export type WalletConnectInitArgs = {
 export class WalletConnectConnector extends AbstractConnector<WalletConnectInitArgs> {
     options!: WalletConnectInitArgs['options']
     WalletConnectProvider!: WalletConnectInitArgs['WalletConnectProvider']
-    walletConnect!: WalletConnectProviderType
 
     constructor() {
         super('WalletConnect', Logo)
@@ -21,19 +20,21 @@ export class WalletConnectConnector extends AbstractConnector<WalletConnectInitA
 
     initImpl({ options, WalletConnectProvider }: WalletConnectInitArgs) {
         this.options = options
-        // store the class as we need to reinstantiate walletConnect provider on every call to connectImpl()
         this.WalletConnectProvider = WalletConnectProvider
         return this
     }
 
     async connectImpl() {
-        this.walletConnect = new this.WalletConnectProvider(this.options)
-        await this.walletConnect.enable()
-        return this.walletConnect as unknown as IExternalProvider
+        const walletConnectProvider = new this.WalletConnectProvider(this.options)
+        this.provider = walletConnectProvider as unknown as IExternalProvider
+        const [accounts, chainId] = await Promise.all([walletConnectProvider.enable(), this._getEthChainId()])
+        return { accounts, chainId }
     }
 
     async disconnectImpl() {
-        return await this.walletConnect.disconnect()
+        const walletConnectProvider = this.provider as unknown as WalletConnectProviderType
+        await walletConnectProvider.disconnect()
+        this.provider = undefined
     }
 }
 

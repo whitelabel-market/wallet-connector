@@ -1,5 +1,5 @@
 import { IExternalProvider } from '../types'
-import { AbstractConnector } from '../core/connectorImpl/abstract'
+import { AbstractConnector } from '../core/connectorImpl/abstract-connector'
 
 export function createInjectedProvider(from: IExternalProvider, selector: keyof IExternalProvider) {
     // handle edge case when multiple injected providers are installed

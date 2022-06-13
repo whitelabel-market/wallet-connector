@@ -2,7 +2,7 @@ import Logo from './logo.svg'
 import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
 import type AuthereumType from 'authereum/dist'
-import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import { AbstractConnector } from '../../core/connectorImpl/abstract-connector'
 
 export type AuthereumOptions = {
     apiKey: string
@@ -38,12 +38,14 @@ class AuthereumConnector extends AbstractConnector<AuthereumInitArgs> {
     async connectImpl() {
         const provider = this.authereum.getProvider()
         provider.authereum = this.authereum
-        await provider.enable()
-        return provider as unknown as IExternalProvider
+        this.provider = provider as unknown as IExternalProvider
+        const [accounts, chainId] = await Promise.all([provider.enable(), this._getEthChainId()])
+        return { accounts, chainId }
     }
 
     async disconnectImpl() {
-        return await this.authereum.logout()
+        await this.authereum.logout()
+        this.provider = undefined
     }
 }
 

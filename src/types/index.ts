@@ -146,10 +146,20 @@ export interface IConnectorInfo {
     logo: string
 }
 
+export type ConnectImplReturnValue = {
+    accounts: string[]
+    chainId: string | number
+}
+
 /**
  * wallet-connector connector implementation
  */
 export interface IConnector<T = void> extends IConnectorInfo {
+    /**
+     * The provider
+     */
+    provider: IExternalProvider | undefined
+
     /**
      * The init-implementation of a connector
      * @param args: Generic arguments needed for initializing the connector
@@ -159,10 +169,10 @@ export interface IConnector<T = void> extends IConnectorInfo {
 
     /**
      * The connect-implementation of a connector
-     * @returns {(Promise<IExternalProvider>)} The provider used for establishing a connection
+     * @returns {(Promise<ConnectImplReturnValue>)} A subset of useful properties to determine a provider
      * @internal
      */
-    connectImpl(): Promise<IExternalProvider>
+    connectImpl(): Promise<ConnectImplReturnValue>
 
     /**
      * The disconnect-implementation of a connector

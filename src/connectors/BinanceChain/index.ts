@@ -1,7 +1,6 @@
 import Logo from './logo.svg'
-import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
-import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import { AbstractConnector } from '../../core/connectorImpl/abstract-connector'
 
 export class BinanceChainConnector extends AbstractConnector {
     constructor() {
@@ -20,12 +19,13 @@ export class BinanceChainConnector extends AbstractConnector {
         } else {
             throw new TypeError('No Binance Chain Wallet found')
         }
-        return provider as unknown as IExternalProvider
+        this.provider = provider
+        const [accounts, chainId] = await Promise.all([this._getEthAccounts(), this._getEthChainId()])
+        return { accounts, chainId }
     }
 
     async disconnectImpl() {
-        // ToDo
-        return null
+        this.provider = undefined
     }
 }
 

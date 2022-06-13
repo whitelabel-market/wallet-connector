@@ -6,6 +6,10 @@ export class ConnectorBridge extends ConnectorWrapperBase {
         super()
     }
 
+    get provider() {
+        return this._impl.provider
+    }
+
     get id() {
         return this._impl.id
     }

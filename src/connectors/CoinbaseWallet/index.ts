@@ -2,8 +2,7 @@ import type { CoinbaseWalletSDK as CoinbaseWalletSDKType } from '@coinbase/walle
 import Logo from './logo.svg'
 import { IExternalProvider } from '../../types'
 import { createConnector } from '../../helpers/construction'
-import { AbstractConnector } from '../../core/connectorImpl/abstract'
-import { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
+import { AbstractConnector } from '../../core/connectorImpl/abstract-connector'
 
 export type CoinbaseWalletInitArgs = {
     options: ConstructorParameters<typeof CoinbaseWalletSDKType>[0] & {
@@ -16,7 +15,6 @@ export type CoinbaseWalletInitArgs = {
 export class CoinbaseWalletConnector extends AbstractConnector<CoinbaseWalletInitArgs> {
     options!: CoinbaseWalletInitArgs['options']
     sdk!: CoinbaseWalletSDKType
-    coinbaseWalletProvider!: CoinbaseWalletProvider
 
     constructor() {
         super('Coinbase Wallet', Logo)
@@ -25,17 +23,17 @@ export class CoinbaseWalletConnector extends AbstractConnector<CoinbaseWalletIni
     initImpl({ options, CoinbaseWalletSDK }: CoinbaseWalletInitArgs) {
         this.options = options
         this.sdk = new CoinbaseWalletSDK(this.options)
-        this.coinbaseWalletProvider = this.sdk.makeWeb3Provider(this.options.rpcUrl)
+        this.provider = this.sdk.makeWeb3Provider(this.options.rpcUrl) as unknown as IExternalProvider
         return this
     }
 
     async connectImpl() {
-        await this.coinbaseWalletProvider?.request({ method: 'eth_requestAccounts' })
-        return this.coinbaseWalletProvider as unknown as IExternalProvider
+        const [accounts, chainId] = await Promise.all([this._ethRequestAccounts(), this._getEthChainId()])
+        return { accounts, chainId }
     }
 
     async disconnectImpl() {
-        return this.sdk.disconnect()
+        await this.sdk.disconnect()
     }
 }
 

@@ -1,7 +1,7 @@
 import Logo from './logo.svg'
 import { IExternalProvider } from '../../types'
 import { createConnector, createInjectedProvider } from '../../helpers/construction'
-import { AbstractConnector } from '../../core/connectorImpl/abstract'
+import { AbstractConnector } from '../../core/connectorImpl/abstract-connector'
 import type detectProviderType from '@metamask/detect-provider'
 
 export type MetaMaskInitArgs = {
@@ -26,21 +26,19 @@ export class MetaMaskConnector extends AbstractConnector<MetaMaskInitArgs> {
     }
 
     async connectImpl() {
-        let provider = (await this.detectProvider(this.options)) as unknown as IExternalProvider
+        const provider = (await this.detectProvider(this.options)) as unknown as IExternalProvider
         if (!provider) {
             MetaMaskConnector._redirect()
             throw new Error('No Metamask provider found')
         }
-
         // handle edge case when multiple injected providers are installed
-        provider = createInjectedProvider(provider, 'isMetaMask')
-        await provider?.request({ method: 'eth_requestAccounts' })
-
-        return provider
+        this.provider = createInjectedProvider(provider, 'isMetaMask')
+        const [accounts, chainId] = await Promise.all([this._ethRequestAccounts(), this._getEthChainId()])
+        return { accounts, chainId }
     }
 
     async disconnectImpl() {
-        return null
+        this.provider = undefined
     }
 
     private static _redirect() {

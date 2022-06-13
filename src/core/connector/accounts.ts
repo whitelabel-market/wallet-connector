@@ -17,10 +17,6 @@ export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
         this.provider?.on('accountsChanged', this._onAccountsChanged.bind(this))
     }
 
-    protected async _getAccounts() {
-        return this._onAccountsChanged(await this._getEthAccounts())
-    }
-
     protected _onAccountsChanged(accounts: string[]) {
         if (!accounts.length) {
             throw new Error('No accounts returned')
@@ -28,9 +24,5 @@ export class ConnectorWrapperWithAccounts extends ConnectorWrapperWithChainId {
         this.accounts = accounts
         this.emit(events.ACCOUNTS_CHANGED, this.accounts)
         return this.accounts
-    }
-
-    private _getEthAccounts() {
-        return this.provider?.request({ method: 'eth_accounts' }) as Promise<string[]>
     }
 }

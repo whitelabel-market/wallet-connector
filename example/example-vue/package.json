@@ -1,25 +1,25 @@
 {
-  "name": "example-vue",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve --port 8000",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "@coinbase/wallet-sdk": "^3.2.0",
-    "@metamask/detect-provider": "^1.2.0",
-    "@walletconnect/web3-provider": "^1.7.8",
-    "@whitelabel-solutions/wallet-connector": "2.1.5",
-    "core-js": "^3.8.3",
-    "vue": "^3.2.13"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-typescript": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "node-polyfill-webpack-plugin": "^1.1.4",
-    "typescript": "~4.5.5"
-  }
+    "name": "example-vue",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "serve": "vue-cli-service serve --port 8000",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+        "@coinbase/wallet-sdk": "^3.2.0",
+        "@metamask/detect-provider": "^1.2.0",
+        "@walletconnect/web3-provider": "^1.7.8",
+        "@whitelabel-solutions/wallet-connector": "link:../../dist",
+        "core-js": "^3.8.3",
+        "vue": "^3.2.13"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "~5.0.0",
+        "@vue/cli-plugin-typescript": "~5.0.0",
+        "@vue/cli-service": "~5.0.0",
+        "node-polyfill-webpack-plugin": "^1.1.4",
+        "typescript": "~4.5.5"
+    }
 }

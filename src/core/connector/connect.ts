@@ -10,22 +10,27 @@ export class ConnectorWrapperConnect extends ConnectorWrapperWithAccounts {
         this._storage = connection.options.cache.enabled ? connection._storage : undefined
     }
 
+    protected _removeAllListeners() {
+        this.provider?.removeAllListeners()
+    }
+
     protected async _activate() {
-        this.provider = await this._impl.connectImpl()
-        await Promise.all([this._getAccounts(), this._getChainId()])
-        console.log('success executing _getAccounts', this)
+        this.accounts = undefined
+        this.chainId = undefined
+        this.error = undefined
+        const { accounts, chainId } = await this._impl.connectImpl()
         this._addChainChangedListener()
         this._addAccountsChangedListener()
-        console.log('set storage', this.id)
+        await this._onChainChanged(chainId)
+        this._onAccountsChanged(accounts)
         this._storage?.set(this.id)
     }
 
     protected async _deactivate() {
-        this._removeBaseListeners()
+        this._removeAllListeners()
         await this._impl.disconnectImpl()
         this.accounts = undefined
         this.chainId = undefined
-        this.provider = undefined
         this.error = undefined
         this._storage?.remove()
     }
