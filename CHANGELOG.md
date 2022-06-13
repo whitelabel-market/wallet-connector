@@ -1,3 +1,10 @@
+## [2.1.6](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.5...v2.1.6) (2022-06-13)
+
+
+### Bug Fixes
+
+* loading state on error ([561c31b](https://github.com/whitelabel-market/wallet-connector/commit/561c31bdd7ad0aed44a0a5e70acf599f328ea7b9))
+
 ## [2.1.5](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.4...v2.1.5) (2022-06-13)
 
 
