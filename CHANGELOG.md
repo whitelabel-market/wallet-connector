@@ -1,3 +1,10 @@
+## [2.1.5](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.4...v2.1.5) (2022-06-13)
+
+
+### Bug Fixes
+
+* provider libs in connector call ([53313a2](https://github.com/whitelabel-market/wallet-connector/commit/53313a2450878a5d7bb33afd9c63c792425359db))
+
 ## [2.1.4](https://github.com/whitelabel-market/wallet-connector/compare/v2.1.3...v2.1.4) (2022-06-11)
 
 
