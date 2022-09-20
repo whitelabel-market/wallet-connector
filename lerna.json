@@ -1,0 +1,23 @@
+{
+    "$schema": "node_modules/@lerna-lite/cli/schemas/lerna-schema.json",
+    "packages": [
+        "packages/*"
+    ],
+    "npmClient": "yarn",
+    "useWorkspaces": true,
+    "version": "independent",
+    "command": {
+        "publish": {
+            "registry": "https://npm.pkg.github.com/"
+        },
+        "version": {
+            "allowBranch": "main",
+            "conventionalCommits": true,
+            "message": "chore(release): updated release notes and package versions",
+            "ignoreChanges": [
+                "*.md"
+            ]
+        }
+    },
+    "useNx": false
+}

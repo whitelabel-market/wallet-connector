@@ -1,6 +1,7 @@
 import path from 'path'
 import assert from 'assert'
 import { execSync as exec } from 'child_process'
+// @ts-ignore
 import fs from 'fs-extra'
 import fg from 'fast-glob'
 import consola from 'consola'

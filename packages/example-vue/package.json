@@ -1,5 +1,5 @@
 {
-    "name": "example-vue",
+    "name": "@whitelabel-solutions/wallet-connector-example-vue",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -11,7 +11,7 @@
         "@coinbase/wallet-sdk": "^3.2.0",
         "@metamask/detect-provider": "^1.2.0",
         "@walletconnect/web3-provider": "^1.7.8",
-        "@whitelabel-solutions/wallet-connector": "2.1.6",
+        "@whitelabel-solutions/wallet-connector": "*",
         "core-js": "^3.8.3",
         "vue": "^3.2.13"
     },

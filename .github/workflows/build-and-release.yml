@@ -20,12 +20,12 @@ jobs:
               run: yarn install --ignore-engines --frozen-lockfile
             - name: Lint
               run: yarn lint
+            - name: Clean
+              run: yarn clean:packages
             - name: Build
-              run: yarn build
-            - name: Typecheck
-              run: yarn typecheck
+              run: yarn build:packages
             - name: Release
               env:
-                  GITHUB_TOKEN: ${{ secrets.PAT }}
+                  GH_TOKEN: ${{ secrets.PAT }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-              run: yarn semantic-release
+              run: yarn release

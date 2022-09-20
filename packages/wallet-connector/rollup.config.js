@@ -1,14 +1,19 @@
-import type { Options as ESBuildOptions } from 'rollup-plugin-esbuild'
-import peerDepsExternal from 'rollup-plugin-peer-deps-external'
-import esbuild from 'rollup-plugin-esbuild'
-import dts from 'rollup-plugin-dts'
-import json from '@rollup/plugin-json'
-import type { OutputOptions, RollupOptions } from 'rollup'
-import { packages } from '../meta/packages'
-import svg from 'rollup-plugin-svg'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import esbuild from "rollup-plugin-esbuild";
+import dts from "rollup-plugin-dts";
+import json from "@rollup/plugin-json";
+import svg from "rollup-plugin-svg";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
-const configs: RollupOptions[] = []
+const packages = [
+    {
+        name: '@whitelabel-solutions/wallet-connector',
+        display: 'A Web3 Ethereum provider solution for multiple Wallets',
+        description: 'A Web3 Ethereum provider solution for multiple Wallets',
+    },
+]
+
+const configs = []
 
 const esbuildPlugin = esbuild()
 
@@ -24,7 +29,7 @@ const externals = [
     '@metamask/detect-provider',
 ]
 
-const esbuildMinifer = (options: ESBuildOptions) => {
+const esbuildMinifer = (options) => {
     const { renderChunk } = esbuild(options)
 
     return {
@@ -49,7 +54,7 @@ for (const { name, external, target } of packages) {
     for (const fn of functionNames) {
         const input = fn === 'index' ? `src/index.ts` : `packages/${name}/${fn}/index.ts`
 
-        const output: OutputOptions[] = []
+        const output = []
 
         output.push({
             file: `./dist/${fn}.mjs`,

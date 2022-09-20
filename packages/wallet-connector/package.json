@@ -1,0 +1,113 @@
+{
+    "name": "@whitelabel-solutions/wallet-connector",
+    "description": "A framework-agnostic Ethereum provider solution to enable wallet connection for dApps.",
+    "keywords": [
+        "blockchain",
+        "crypto",
+        "wallet"
+    ],
+    "homepage": "https://github.com/whitelabel-market",
+    "bugs": {
+        "url": "https://github.com/whitelabel-market/wallet-connector/issues"
+    },
+    "license": "MIT",
+    "author": "Whitelabel Solutions <https://github.com/whitelabel-market>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/whitelabel-market/wallet-connector.git"
+    },
+    "version": "2.1.2",
+    "main": "./index.cjs",
+    "module": "./index.mjs",
+    "types": "./index.d.ts",
+    "unpkg": "./index.iife.min.js",
+    "jsdelivr": "./index.iife.min.js",
+    "exports": {
+        ".": {
+            "import": "./index.mjs",
+            "require": "./index.cjs",
+            "types": "./index.d.ts"
+        },
+        "./*": "./*"
+    },
+    "sideEffects": false,
+    "scripts": {
+        "prebuild": "yarn run clean",
+        "build": "cross-env tsc --noEmit && rollup -c",
+        "clean": "rimraf dist node_modules",
+        "lint": "eslint . --fix",
+        "lint-staged": "lint-staged"
+    },
+    "dependencies": {
+        "eventemitter3": "^4.0.7"
+    },
+    "peerDependencies": {
+        "@coinbase/wallet-sdk": "^3.x",
+        "@metamask/detect-provider": "^1.x",
+        "@walletconnect/web3-provider": "^1.x",
+        "authereum": "^0.x",
+        "eth-provider": "^0.x",
+        "fortmatic": "^2.x"
+    },
+    "peerDependenciesMeta": {
+        "@coinbase/wallet-sdk": {
+            "optional": true
+        },
+        "@metamask/detect-provider": {
+            "optional": true
+        },
+        "@walletconnect/web3-provider": {
+            "optional": true
+        },
+        "authereum": {
+            "optional": true
+        },
+        "eth-provider": {
+            "optional": true
+        },
+        "fortmatic": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "@babel/core": "^7.17.10",
+        "@babel/types": "^7.17.10",
+        "@coinbase/wallet-sdk": "^3.2.0",
+        "@metamask/detect-provider": "^1.2.0",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.3.0",
+        "@rollup/plugin-replace": "^4.0.0",
+        "@rushstack/eslint-patch": "^1.1.1",
+        "@types/node": "^17.0.32",
+        "@typescript-eslint/eslint-plugin": "^5.25.0",
+        "@typescript-eslint/parser": "^5.25.0",
+        "@walletconnect/web3-provider": "^1.7.8",
+        "authereum": "^0.1.14",
+        "cross-env": "^7.0.3",
+        "esbuild": "^0.14.39",
+        "esbuild-register": "^3.3.2",
+        "eslint": "^8.15.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eth-provider": "^0.12.1",
+        "fortmatic": "^2.4.0",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.6.2",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.72.1",
+        "rollup-plugin-dts": "^4.2.1",
+        "rollup-plugin-esbuild": "^4.9.1",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-peer-deps-external": "^2.2.4",
+        "rollup-plugin-svg": "^2.0.0",
+        "typescript": "^4.6.4"
+    },
+    "lint-staged": {
+        "*.{js,ts,tsx,vue}": [
+            "eslint --fix"
+        ]
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
